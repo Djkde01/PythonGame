@@ -14,9 +14,9 @@ class Enemigo1(Enemigo):
         self.type = "rival1"
         self.velx = 0
         self.vely = 0
-        self.vida = 3
+        self.vidas = 3
         self.damage = 1
-        self.estado = 1
+        self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
 
     def RetPos(self):
         x = self.rect.x + 20
@@ -26,9 +26,7 @@ class Enemigo1(Enemigo):
     def detener(self):
         self.velx=0
         self.vely=0
-
-    #def ataque(self):
-        #self.estado = 2
+        self.estado=1
 
     def morir(self):
         if self.vidas <= 0:
@@ -39,6 +37,11 @@ class Enemigo1(Enemigo):
         self.rect.x += self.velx
         self.rect.y += self.vely
 
+    def mover(self):
+        self.velx = random.randrange(-5,6)
+        self.estado = 2
+
+    #si llega hasta alguno de los bordes cambiará la dirección en la que iba hacia el lado contrario
     def rebotar(self):
         if self.rect.right >= ANCHO:
                 self.velx *= -1

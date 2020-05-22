@@ -8,6 +8,7 @@ class Enemigo(pygame.sprite.Sprite):
         self.rect.y = pos[1]
         self.velx = 0
         self.vely = 0
+        #estas asignaciones es solo pare que tenga esos atributos y no estén "vacíos":
         self.type = type
         self.vidas = vidas
         self.damage = damage

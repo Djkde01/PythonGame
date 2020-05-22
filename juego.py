@@ -16,16 +16,16 @@ if __name__ == '__main__':
     cosa=Jugador([300,200])
     jugadores.add(cosa)
 
-    n=4
+    n=6
     for i in range(n):
-        x = random.randrange(ANCHO)
+        x = random.randrange(ANCHO-150)
         y = random.randrange((ALTO-150))
         r = Enemigo1([x,y])
         rivales1.add(r)
 
-    m=2
+    m=3
     for k in range(m):
-        x = random.randrange(ANCHO)
+        x = random.randrange(ANCHO-150)
         y = random.randrange((ALTO-150))
         r2 = Enemigo2([x,y])
         rivales2.add(r2)
@@ -33,27 +33,35 @@ if __name__ == '__main__':
     reloj = pygame.time.Clock()
     fin = False
 
+    #movimiento de los enemigos
+    for r in rivales1:
+        r.mover()
+
+    for r2 in rivales2:
+        r2.mover()
+
     while not fin:
+        #control de los enemigos
         for r in rivales1:
-            r.velx = random.randrange(-5,6)
-            r.vely = random.randrange(-5,6)
             r.rebotar()
 
         for r2 in rivales2:
-            r2.velx = random.randrange(-5,6)
-            r2.vely = random.randrange(-5,6)
             r2.rebotar()
 
+        #movimiento y control del jugador
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 fin = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     cosa.mover(5,0)
+                    cosa.estado = 1
                 if event.key == pygame.K_LEFT:
                     cosa.mover(-5,0)
+                    cosa.estado = 1
                 if event.key == pygame.K_UP:
                     cosa.mover(0,-5)
+                    cosa.estado = 1
                 if event.key == pygame.K_DOWN:
                     cosa.mover(0,5)
                 if event.key == pygame.K_s:
@@ -61,29 +69,28 @@ if __name__ == '__main__':
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
-        cosa.estado = 1
+                cosa.estado = 1
+        cosa.bordes()
 
-        cosa.rebotar()
-
-            #Colision
-        choq = pygame.sprite.spritecollide(cosa,rivales1,False)
+        #Colision ; debería ver si el jugador está atacando y solo bajarle vidas si no lo está pero it doesn't work :(
+        choq = pygame.sprite.spritecollide(cosa,rivales1,True)
         for b in choq:
             if cosa.estado == 4:
-                r.vidas -= 1
+                for r in rivales1:
+                    r.vidas -= 1
+            else:
+                cosa.vidas -= 1
 
-        choq2 = pygame.sprite.spritecollide(cosa,rivales2,False)
+        choq2 = pygame.sprite.spritecollide(cosa,rivales2,True)
         for c in choq2:
             if cosa.estado == 4:
-                r2.vidas -= 1
+                for r in rivales1:
+                    r2.vidas -= 1
+            else:
+                cosa.vidas -= 3
+        #------
 
-        col1 = pygame.sprite.spritecollide(cosa,rivales1,True)
-        for e in col1:
-            cosa.vidas -= 1
-
-        col2 = pygame.sprite.spritecollide(cosa,rivales2,True)
-        for a in col2:
-            cosa.vidas -= 3
-
+        #fin del juego
         cosa.morir()
         if cosa.estado==7:
             jugadores.remove(cosa)
@@ -93,14 +100,19 @@ if __name__ == '__main__':
             #msj = fuente.render("Fin de juego",True,BLANCO)
             #pygame.display.flip()
             fin = True
+        #----
 
+        #debería verificar si los enemigos están muertos y eliminarlos cuando lo estén but ya los eliminó entonces no c bro
         for r in rivales1:
+            r.morir()
             if r.estado == 3:
                 rivales1.remove(r)
 
         for r2 in rivales2:
+            r2.morir()
             if r2.estado == 3:
                 rivales2.remove(r2)
+        #----
 
         #Refresco
         ventana.fill(NEGRO)
