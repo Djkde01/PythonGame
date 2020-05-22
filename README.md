@@ -2,10 +2,10 @@
 REQUERIMIENTOS
 - Intro
 - Final
-- Música por escenario (0/3)
+- Música por escenario (3/3)
 - Títulos (0/2)
-- Fondos (0/3)
-- Tipos de enemigos (0/2)
+- Fondos (1/3)
+- Tipos de enemigos (2/2)
 - Efectos ambientales (0/2)
 - Generadores (0/2)
 - Modificadores (0/3)
@@ -25,9 +25,9 @@ ELEMENTOS DEL JUEGO
 		- Ataque cuerpo a cuerpo
 		- Estados: Estándar, con velocidad, con tótem, atacando, con objetos, quemado, muerto.
 	- Detalles
-		- Tamaño sprite = ?
+		- Tamaño sprite = 60px x 40px
 		- Frames de animación = ?
-		- Estados: 5
+		- Estados: 7
 - Enemy 1
 	- Atributos
 		- Vida: 3
