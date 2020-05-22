@@ -1,0 +1,177 @@
+# PythonGame
+REQUERIMIENTOS
+- Intro
+- Final
+- Música por escenario (0/3)
+- Títulos (0/2)
+- Fondos (0/3)
+- Tipos de enemigos (0/2)
+- Efectos ambientales (0/2)
+- Generadores (0/2)
+- Modificadores (0/3)
+- Barra jugador (Vida, elementos, tiempo)
+- Nivel principal
+
+ELEMENTOS DEL JUEGO
+- Player
+	- Atributos
+		- Vida: 5
+		- Daño: Según objeto: (Ver modificadores)
+		- Velocidad: ?
+		- Inventario: 4 (2 objetos monumento, 1 tótem, 1 buff)
+	- Comportamiento:
+		- Colisión con bordes
+		- Recoge elementos para su invenario colisionando con ellos
+		- Ataque cuerpo a cuerpo
+		- Estados: Estándar, con velocidad, con tótem, atacando, con objetos, quemado, muerto.
+	- Detalles
+		- Tamaño sprite = ?
+		- Frames de animación = ?
+		- Estados: 5
+- Enemy 1
+	- Atributos
+		- Vida: 3
+		- Daño: 1
+		- Tipo: 1
+		- Movimiento X: Random (0 - ?)
+		- Movimiento Y: Random (0 - ?)
+		- Estados: 3
+	- Comportamiento:
+		- Colisión con bordes
+		- Ataque cuerpo a cuerpo
+		- Movimiento en línea recta
+		- Estados: Rondando, muerto.
+	- Detalles
+		- Tamaño sprite = ?
+		- Frames de animación = ?
+		- Estados: 3
+- Enemy 2
+	- Atributos
+		- Vida: 1
+		- Daño: 3
+		- Tipo: 2
+		- Movimiento X: Random (5 - ?)
+		- Movimiento Y: Random (5 - ?)
+		- Estados: 3
+	- Comportamiento:
+		- Colisión con bordes
+		- Ataque cuerpo a cuerpo
+		- Movimiento en línea recta
+		- Estados: Rondando, atacando, muerto.
+	- Detalles
+		- Tamaño sprite = ?
+		- Frames de animación = ?
+		- Estados: 3
+- Spawner (Generador Enemigos)
+	- Atributos
+		- Tipo de enemigo: Enemy 1 o Enemy 2
+		- Cantidad enemigos generados: 3 - 6 por ronda
+		- Frecuencia rondas: Cada 10 seg
+	- Comportamiento:
+		- Objeto fijo
+		- Se considera tipo muro (Ver tipos de suelo)
+		- En cada ronda genera una cantidad de un solo tipo de enemigo (Definido por el programador)
+	- Detalles
+		- Dirección de movimiento de enemigos será aleatoria
+		- Tamaño sprite = ?
+		- Frames de animación = ?
+		- Estados: 2 (En ronda, desactivado)
+		- Cantidad mínima por nivel: 2
+- Monumento
+	- Atributos
+		- Objetos puestos: 0 (Si tiene 2, cambia de estado a completo)
+	- Comportamiento:
+		- Se considera tipo muro
+		- Si el player colisiona teniendo los dos objetos, se completa el nivel
+	- Detalles
+		- Tamaño sprite = ?
+		- Ubicado en el lugar donde inicia el jugador
+		- Frames de animación = ?
+		- Estados: 2 (Incompleto, completo)
+
+
+TIPOS DE SUELO
+-Estándar
+	- No inlijen ningún efecto
+	- Se puede atravesar
+-Muro
+	- No se puede atravesar
+	- Si un enemy lo colisiona, cambia su dirección x & y por (-1)
+-Volcánico
+
+-Borde
+	- Se ubica en los lados del final del mapa
+	- No se puede atravesar
+
+COLLIDER MANAGER
+Se llama cada vez que dos objetos colisionan, dependiendo su tipo, llama un evento
+	- Player (Estado atacando) y Enemy
+		- Llama evento Attack
+	- Player (Cualquier otro estado) y Enemy
+		- Llama evento Damage
+	- Player o Enemy y Muro o Borde
+		- No lo deja pasar
+	- Player (Estado Con Objetos) y Momunento
+		- Llama evento PlaceObjects
+	- Player con un Objeto
+		- Llama evento PickObject
+	- Player con Tótem
+		- Llama evento PickTotem
+	- Player con Vida Extra
+		- Llama evento HealthBoost
+	- Player con Rapidez
+		- Llama evento SpeedBoost
+	- Player con Volcánico
+		- Llama evento Ablaze
+
+EVENTOS
+- Attack
+	- A la vida de Enemy se le resta el daño de Player
+	- Si la vida de Enemy es igual o menor a 0:
+		- Se pasa estado de Enemy a Muerto
+		- Llama evento EnemyKilled
+- Damage
+	- A la vida de Player se le resta el daño de Enemy
+	- Si la vida de Player es igual o menor a 0:
+		- Si estado de player es Con Tótem o tiene tótem en inventario:
+			- Llama evento Resurrection
+		- Si es cualquier otro estado (Menos muerto) o no tiene tótem:
+			- Llama evento PlayerKilled
+- PlaceObjects
+	- Si Player tiene los dos objetos
+		- Llama evento Win
+- PickObject
+	- Se añade un objeto al inventario de Player
+	- El objeto se borra del mapa
+	- Estado de Player pasa a Con Objetos
+- PickTotem
+	- Se añade Tótem al inventario
+	- Estado de Player pasa a Con Tótem
+- HealthBoost
+	- La vida de Player se incrementa en +1
+- SpeedBoost
+	- El estado de Player pasa a Con Velocidad (Velocidad * 2) por 5 segundos
+	- Luego pasa al estado anterior
+- Ablaze
+	- La vida de Player se reduce en -1
+		- Si la vida de Player es igual o menor a 0:
+			- Si estado de player es Con Tótem o tiene tótem en inventario:
+				- Llama evento Resurrection
+			- Si es cualquier otro estado (Menos muerto) o no tiene tótem:
+				- Llama evento PlayerKilled
+	- El estado de Player pasa a quemado (Velocidad/2) por 5 segundos
+	- Luego pasa al estado anterior
+- EnemyKilled
+	- Elimina enemigo muerto
+- Resurrection
+	- Se incrementa vida de jugador a 2
+	- Se elimina tótem del inventario
+	- Se pasa el estado de Player a Estándar
+- PlayerKilled
+	- Se pasa el estado de Player a Muerto
+	- Se acaba el juego
+- Win
+	- Se pasa al siguiente nivel
+- TimeOut
+	- Se llama cuando el tiempo se cumple
+	- Se llama evento PlayerKilled
