@@ -9,10 +9,11 @@ class Jugador(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+        self.dir = 0 #0:arriba, 1:derecha, 2:abajo, 3:izquierda
         self.velx = 0
         self.vely = 0
         self.vidas = 5
-        self.estado = 1 #1 estándar, 2 velocidad, 3 totem, 4 ataque, 5 con los 2 objetos, 6 en llamas, 7 muerto
+        self.estado = 1 #1 estándar, 2 velocidad, 3 totem, 4 disparo, 5 con los 2 objetos, 6 en llamas, 7 muerto
         self.llamas = 0
         self.inventario = [0,0,0] #objetos, tótem, buff
         self.mover(0,0)
@@ -23,8 +24,6 @@ class Jugador(pygame.sprite.Sprite):
         self.rect.y += self.vely
 
     def mover(self,x,y):
-        self.velx = 0
-        self.vely = 0
         self.velx = x
         self.vely = y
 
@@ -39,7 +38,7 @@ class Jugador(pygame.sprite.Sprite):
         self.estado = 1
 
     #Control ; cuando llega a los extremos no permite que pase de los límites y solo se mueve cuando se dirija hacia otra dirección
-    def bordes(self):
+    '''def bordes(self):
         if (self.rect.right >= ANCHO) and (self.velx > 0):
                 self.detener()
         if (self.rect.left <= 0) and (self.velx < 0):
@@ -47,31 +46,31 @@ class Jugador(pygame.sprite.Sprite):
         if (self.rect.top <= 0) and (self.vely < 0):
                 self.detener()
         if (self.rect.bottom >= ALTO) and (self.vely > 0):
-                self.detener()
+                self.detener()'''
 
     #cuando recoge el buff activa el estado de velocidad
     def mayo_rakuin(self):
-         if self.inventario[3] > 0:
+         if self.inventario[2] > 0:
              self.estado = 2
              self.velx *= 2 # sería conveniente que esto esté en el código del juego
              self.vely *= 2 # y se dé cuando el estado pase a 2
 
     #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
     def objetos(self):
-        if self.inventario[1] == 2:
+        if self.inventario[0] == 2:
             self.estado = 5
 
     # Muerte ; cuando las vidas llegan a 0
     def morir(self):
          if self.vidas <= 0:
              #verifica si tiene un totem, si es así le suma 3 vidas y le quita el totem del inventario
-            if self.inventario[2] > 0:
+            if self.inventario[1] > 0:
                 self.estado = 3
                 self.vidas = 2
-                self.inventario[2] -= 1
+                self.inventario[1] -= 1
                 #self.estado = 1
             #si no se muere :p
-            if self.inventario[2] <= 0:
+            if self.inventario[1] <= 0:
                 self.detener()
                 self.estado = 7
 

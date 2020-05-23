@@ -4,34 +4,68 @@ from constantes import *
 from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
+from bala import Bala
 
 if __name__ == '__main__':
     pygame.init()
     ventana=pygame.display.set_mode([ANCHO,ALTO])
+
+    #SECCION PREVIA, INICIO
+    pygame.font.init()
+    fuente = pygame.font.Font(None,40)
+    mensaje_inicio = fuente.render("El maravilloso juego", True, BLANCO)
+    fin = False
+    previo = False
+
+    while (not fin) and (not previo):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                fin = True
+            if event.type == pygame.KEYDOWN:
+                previo = True
+
+        ventana.fill(NEGRO)
+        ventana.blit(mensaje_inicio,[200,200])
+        pygame.display.flip()
+
+    #SECCION DE CONFIGURACION DE NIVEL
     #Grupos
     jugadores = pygame.sprite.Group()
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
+    balas = pygame.sprite.Group()
 
+    #Creacion personaje principal
     cosa=Jugador([300,200])
     jugadores.add(cosa)
 
-    n=6
-    for i in range(n):
+    #Creacion de enemigo tipo 1
+    x1 = random.randrange(ANCHO-150)
+    y1 = random.randrange((ALTO-150))
+    r1=Enemigo1([x1,y1])
+    rivales1.add(r1)
+
+    '''n=4
+    for a in range(n):
         x = random.randrange(ANCHO-150)
         y = random.randrange((ALTO-150))
-        r = Enemigo1([x,y])
-        rivales1.add(r)
+        r1 = Enemigo1([x,y])
+        rivales1.add(r1)'''
 
-    m=3
-    for k in range(m):
-        x = random.randrange(ANCHO-150)
-        y = random.randrange((ALTO-150))
-        r2 = Enemigo2([x,y])
-        rivales2.add(r2)
+    #Creacion de enemigo tipo 2
+    x2 = random.randrange(ANCHO-150)
+    y2 = random.randrange((ALTO-150))
+    r2=Enemigo2([x2,y2])
+    rivales2.add(r2)
 
+    #Texto control vidas jugador
+    info = pygame.font.Font(None,30)
+    vidas = "Vidas: " + str(cosa.vidas)
+    info_vidas = info.render(vidas,True,BLANCO)
+
+    cont = 0
     reloj = pygame.time.Clock()
-    fin = False
+    fin_juego = False
 
     #movimiento de los enemigos
     for r in rivales1:
@@ -40,7 +74,8 @@ if __name__ == '__main__':
     for r2 in rivales2:
         r2.mover()
 
-    while not fin:
+    #Ciclo principal de juego
+    while (not fin) and (not fin_juego):
         #control de los enemigos
         for r in rivales1:
             r.rebotar()
@@ -56,71 +91,126 @@ if __name__ == '__main__':
                 if event.key == pygame.K_RIGHT:
                     cosa.mover(5,0)
                     cosa.estado = 1
+                    cosa.dir = 1
                 if event.key == pygame.K_LEFT:
                     cosa.mover(-5,0)
                     cosa.estado = 1
+                    cosa.dir = 3
                 if event.key == pygame.K_UP:
                     cosa.mover(0,-5)
                     cosa.estado = 1
+                    cosa.dir = 0
                 if event.key == pygame.K_DOWN:
                     cosa.mover(0,5)
+                    cosa.estado = 1
+                    cosa.dir = 2
                 if event.key == pygame.K_s:
+                    #Estado de disparo y creacion de bala
                     cosa.estado = 4
+                    pos = cosa.RetPos()
+                    b = Bala(pos)
+                    if cosa.dir == 0:
+                        b.velx = 0
+                        b.vely = -5
+                    if cosa.dir == 1:
+                        b.velx = 5
+                        b.vely = 0
+                    if cosa.dir == 2:
+                        b.velx = 0
+                        b.vely = 5
+                    if cosa.dir == 3:
+                        b.velx = -5
+                        b.vely = 0
+                    balas.add(b)
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
                 cosa.estado = 1
-        cosa.bordes()
+        #cosa.bordes()
 
-        #Colision ; debería ver si el jugador está atacando y solo bajarle vidas si no lo está pero it doesn't work :(
-        choq = pygame.sprite.spritecollide(cosa,rivales1,True)
-        for b in choq:
-            if cosa.estado == 4:
-                for r in rivales1:
-                    r.vidas -= 1
-            else:
-                cosa.vidas -= 1
+        #Limpieza de memoria balas
+        for b in balas:
+            #Deteccion de colision entre bala y enemigo
+            disp = pygame.sprite.spritecollide(b,rivales1,False)
+            disp2 = pygame.sprite.spritecollide(b,rivales2,False)
+            #Eliminacion al salir de pantalla
+            if b.rect.y < -50:
+                balas.remove(b)
+            if b.rect.y > 850:
+                balas.remove(b)
+            if b.rect.x < -50:
+                balas.remove(b)
+            if b.rect.x > 850:
+                balas.remove(b)
+            #Eliminacion al hacer colision con un enemigo y se reduce
+            #la vida de ese enemigo
+            for r in disp:
+                balas.remove(b)
+                r1.vidas -=1
+                print("Enemy 1:",r1.vidas)
+            for r2 in disp2:
+                balas.remove(b)
+                r2.vidas -=1
+                print("Enemy 2:",r2.vidas)
 
-        choq2 = pygame.sprite.spritecollide(cosa,rivales2,True)
-        for c in choq2:
-            if cosa.estado == 4:
-                for r in rivales1:
-                    r2.vidas -= 1
-            else:
-                cosa.vidas -= 3
-        #------
+        #Colision entre enemigo y jugador, REVISAR
+        col = pygame.sprite.spritecollide(r1,jugadores,False)
+        col2 = pygame.sprite.spritecollide(r2,jugadores,False)
+        if col:
+            cosa.vidas -= 1
+            col = False
+            vidas = "Vidas: " + str(cosa.vidas)
+            print("Federico: ", cosa.vidas)
+        if col2:
+            cosa.vidas -= 1
+            col2 = False
+            vidas = "Vidas: " + str(cosa.vidas)
+            print("Federico: ", cosa.vidas)
+
 
         #fin del juego
         cosa.morir()
         if cosa.estado==7:
             jugadores.remove(cosa)
-            #ventana.fill(NEGRO)
-            #pygame.font.init()
-            #fuente = pygame.font.Font(None, 32)
-            #msj = fuente.render("Fin de juego",True,BLANCO)
-            #pygame.display.flip()
-            fin = True
-        #----
+            fin_juego = True
 
-        #debería verificar si los enemigos están muertos y eliminarlos cuando lo estén but ya los eliminó entonces no c bro
-        for r in rivales1:
-            r.morir()
-            if r.estado == 3:
-                rivales1.remove(r)
+
+        #Si el rival perdio toda su vida, es eliminado
+        for r1 in rivales1:
+            r1.morir()
+            if r1.estado == 3:
+                rivales1.remove(r1)
 
         for r2 in rivales2:
             r2.morir()
             if r2.estado == 3:
                 rivales2.remove(r2)
-        #----
+
 
         #Refresco
-        ventana.fill(NEGRO)
-        jugadores.draw(ventana)
-        rivales1.draw(ventana)
-        rivales2.draw(ventana)
         jugadores.update()
         rivales1.update()
+        balas.update()
         rivales2.update()
+        ventana.fill(NEGRO)
+        info_vidas = info.render(vidas,True,BLANCO)
+        ventana.blit(info_vidas,[10,10])
+        jugadores.draw(ventana)
+        balas.draw(ventana)
+        rivales1.draw(ventana)
+        rivales2.draw(ventana)
+
         pygame.display.flip()
         reloj.tick(40)
+
+    #SECCION FINAL, FIN DEL JUEGO
+    fuente_f = pygame.font.Font(None,32)
+    mensaje_fin = fuente_f.render("Que bobo, perdio", True, BLANCO)
+    while not fin:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                fin  = True
+
+        ventana.fill(NEGRO)
+        ventana.blit(mensaje_fin,[200,200])
+        pygame.display.flip()
