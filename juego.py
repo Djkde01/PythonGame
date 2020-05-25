@@ -4,7 +4,27 @@ from constantes import *
 from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
-from bala import Bala
+from sprites import *
+
+class Creacion(pygame.sprite.Sprite):
+    def __init__(self,pared,muros,booster,el1,el2,genera,lava,vidaBarra,totems):
+        for i in range (16):
+            p = Pared([-800,i*50])
+            p2 = Pared([1550,i*50])
+            pared.add(p)
+            pared.add(p2)
+        for j in range (32):
+            p3 = Pared([j*50,0])
+            p4 = Pared([j*50,750])
+            pared.add(p3)
+            pared.add(p4)
+        for j in range(16):
+            p5 = Pared([-j*50,0])
+            p6 = Pared([-j*50,750])
+            pared.add(p5)
+            pared.add(p6)
+        m = Muro([-270,50])
+        muros.add(m)
 
 if __name__ == '__main__':
     pygame.init()
@@ -29,11 +49,34 @@ if __name__ == '__main__':
         pygame.display.flip()
 
     #SECCION DE CONFIGURACION DE NIVEL
+
+    #Carga de mapa
+    fondo = pygame.image.load("mapavacio.jpg")
+    f_info = fondo.get_rect()
+    f_velx = 0
+    f_posx = -800
+    lim_der = 720
+    lim_izq = 50
+    f_lim_izq = 0
+    f_lim_der = ANCHO - f_info[2]
+
     #Grupos
     jugadores = pygame.sprite.Group()
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     balas = pygame.sprite.Group()
+    pared = pygame.sprite.Group()
+    muros = pygame.sprite.Group()
+    booster = pygame.sprite.Group()
+    el1 = pygame.sprite.Group()
+    el2 = pygame.sprite.Group()
+    genera = pygame.sprite.Group()
+    lava = pygame.sprite.Group()
+    vidaBarra = pygame.sprite.Group()
+    totems = pygame.sprite.Group()
+
+    #Llamado a clase para crear todos los sprites
+    Creacion(pared,muros,booster,el1,el2,genera,lava,vidaBarra,totems)
 
     #Creacion personaje principal
     cosa=Jugador([300,200])
@@ -128,6 +171,41 @@ if __name__ == '__main__':
                 cosa.estado = 1
         #cosa.bordes()
 
+        #Control movimiento jugador con mapa
+        if cosa.rect.x > lim_der:
+            cosa.rect.x = lim_der
+            if f_posx > f_lim_der:
+                f_velx = -5
+            else:
+                f_velx = 0
+
+        elif cosa.rect.x < lim_izq:
+            cosa.rect.x = lim_izq
+            if f_posx < f_lim_izq:
+                f_velx = 5
+            else:
+                f_velx = 0
+        else:
+            f_velx =  0
+
+        #Control movimiento objetos junto con mapa
+        for p in pared:
+            p.f_velxs = f_velx
+        for m in muros:
+            m.f_velxs = f_velx
+        for b in booster:
+            b.f_velxs = f_velx
+        for e in el1:
+            e.f_velxs = f_velx
+        for h in el2:
+            h.f_velxs = f_velx
+        for g in genera:
+            g.f_velxs = f_velx
+        for l in lava:
+            l.f_velxs = f_velx
+        for t in totems:
+            t.f_velxs = f_velx            
+
         #Limpieza de memoria balas
         for b in balas:
             #Deteccion de colision entre bala y enemigo
@@ -192,16 +270,30 @@ if __name__ == '__main__':
         rivales1.update()
         balas.update()
         rivales2.update()
-        ventana.fill(NEGRO)
-        info_vidas = info.render(vidas,True,BLANCO)
-        ventana.blit(info_vidas,[10,10])
+        pared.update()
+        #ventana.fill(NEGRO)
+        ventana.blit(fondo,[f_posx,0])
         jugadores.draw(ventana)
         balas.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
+        pared.draw(ventana)
+        muros.draw(ventana)
+        booster.draw(ventana)
+        el1.draw(ventana)
+        el2.draw(ventana)
+        genera.draw(ventana)
+        lava.draw(ventana)
+        vidaBarra.draw(ventana)
+        totems.draw(ventana)
+        info_vidas = info.render(vidas,True,BLANCO)
+        ventana.blit(info_vidas,[10,10])
 
         pygame.display.flip()
         reloj.tick(40)
+
+        #Movimiento del fondo
+        f_posx += f_velx
 
     #SECCION FINAL, FIN DEL JUEGO
     fuente_f = pygame.font.Font(None,32)
