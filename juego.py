@@ -204,7 +204,7 @@ if __name__ == '__main__':
         for l in lava:
             l.f_velxs = f_velx
         for t in totems:
-            t.f_velxs = f_velx            
+            t.f_velxs = f_velx
 
         #Limpieza de memoria balas
         for b in balas:
@@ -232,18 +232,25 @@ if __name__ == '__main__':
                 print("Enemy 2:",r2.vidas)
 
         #Colision entre enemigo y jugador, REVISAR
+        impacto = False
         col = pygame.sprite.spritecollide(r1,jugadores,False)
         col2 = pygame.sprite.spritecollide(r2,jugadores,False)
         if col:
+            impacto = True
+            cosa.velx *= -1
+            cosa.vely *= -1
             cosa.vidas -= 1
-            col = False
+            print ("Vidas: ", cosa.vidas)
             vidas = "Vidas: " + str(cosa.vidas)
-            print("Federico: ", cosa.vidas)
         if col2:
+            impacto = True
+            cosa.velx *= -1
+            cosa.vely *= -1
             cosa.vidas -= 1
-            col2 = False
+            print ("Vidas: ", cosa.vidas)
             vidas = "Vidas: " + str(cosa.vidas)
-            print("Federico: ", cosa.vidas)
+
+        impacto = False
 
 
         #fin del juego
