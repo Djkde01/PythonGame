@@ -57,7 +57,7 @@ class Jugador(pygame.sprite.Sprite):
 
     #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
     def objetos(self):
-        if self.inventario[0] == 2:
+        if self.inventario[0] == 2: 
             self.estado = 5
 
     # Muerte ; cuando las vidas llegan a 0
