@@ -5,6 +5,8 @@ from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
 from bala import Bala
+from velocidad import Velocidad
+from salud import Salud
 
 if __name__ == '__main__':
     pygame.init()
@@ -34,6 +36,8 @@ if __name__ == '__main__':
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     balas = pygame.sprite.Group()
+    speed = pygame.sprite.Group()
+    health = pygame.sprite.Group()
 
     #Creacion personaje principal
     cosa=Jugador([300,200])
@@ -45,12 +49,12 @@ if __name__ == '__main__':
     r1=Enemigo1([x1,y1])
     rivales1.add(r1)
 
-    '''n=4
-    for a in range(n):
-        x = random.randrange(ANCHO-150)
-        y = random.randrange((ALTO-150))
-        r1 = Enemigo1([x,y])
-        rivales1.add(r1)'''
+    v = Velocidad([50,50])
+    speed.add(v)
+
+    s = Salud([600,600])
+    health.add(s)
+
 
     #Creacion de enemigo tipo 2
     x2 = random.randrange(ANCHO-150)
@@ -122,6 +126,10 @@ if __name__ == '__main__':
                         b.velx = -5
                         b.vely = 0
                     balas.add(b)
+                #verifica si tiene modificador PERO solo funciona en el primer movimiento
+                if cosa.estado == 2:
+                    cosa.velx *= 2
+                    cosa.vely *= 2
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
@@ -167,6 +175,16 @@ if __name__ == '__main__':
             vidas = "Vidas: " + str(cosa.vidas)
             print("Federico: ", cosa.vidas)
 
+        #modificadores
+        sal = pygame.sprite.spritecollide(s,jugadores,False)
+        vel = pygame.sprite.spritecollide(v,jugadores,False)
+        if sal:
+            cosa.inventario[1] = 1
+            health.remove(s)
+        if vel:
+            cosa.inventario[2] = 1
+            speed.remove(v)
+            cosa.mayo_rakuin()
 
         #fin del juego
         cosa.morir()
@@ -199,6 +217,8 @@ if __name__ == '__main__':
         balas.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
+        speed.draw(ventana)
+        health.draw(ventana)
 
         pygame.display.flip()
         reloj.tick(40)
