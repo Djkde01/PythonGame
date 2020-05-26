@@ -4,8 +4,10 @@ from constantes import *
 from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
-<<<<<<< HEAD:jugar.py
 from sprites import *
+from bala import Bala
+from velocidad import Velocidad
+from salud import Salud
 
 class Creacion(pygame.sprite.Sprite):
     def __init__(self,pared,muros,booster,el1,el2,genera,lava,vidaBarra,totems):
@@ -26,11 +28,7 @@ class Creacion(pygame.sprite.Sprite):
             pared.add(p6)
         m = Muro([-270,50])
         muros.add(m)
-=======
-from bala import Bala
-from velocidad import Velocidad
-from salud import Salud
->>>>>>> 6a436b04cfd8008234f17256524a2858cf1a07d5:juego.py
+
 
 if __name__ == '__main__':
     pygame.init()
@@ -71,7 +69,7 @@ if __name__ == '__main__':
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     balas = pygame.sprite.Group()
-<<<<<<< HEAD:jugar.py
+
     pared = pygame.sprite.Group()
     muros = pygame.sprite.Group()
     booster = pygame.sprite.Group()
@@ -81,13 +79,12 @@ if __name__ == '__main__':
     lava = pygame.sprite.Group()
     vidaBarra = pygame.sprite.Group()
     totems = pygame.sprite.Group()
+    speed = pygame.sprite.Group()
+    health = pygame.sprite.Group()
 
     #Llamado a clase para crear todos los sprites
     Creacion(pared,muros,booster,el1,el2,genera,lava,vidaBarra,totems)
-=======
-    speed = pygame.sprite.Group()
-    health = pygame.sprite.Group()
->>>>>>> 6a436b04cfd8008234f17256524a2858cf1a07d5:juego.py
+
 
     #Creacion personaje principal
     cosa=Jugador([300,200])
@@ -248,7 +245,7 @@ if __name__ == '__main__':
                 r2.vidas -=1
                 print("Enemy 2:",r2.vidas)
 
-        #Colision entre enemigo y jugador, REVISAR
+        #Colision entre enemigo y jugador
         impacto = False
         col = pygame.sprite.spritecollide(r1,jugadores,False)
         col2 = pygame.sprite.spritecollide(r2,jugadores,False)
@@ -312,7 +309,8 @@ if __name__ == '__main__':
         balas.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
-<<<<<<< HEAD:jugar.py
+        speed.draw(ventana)
+        health.draw(ventana)
         pared.draw(ventana)
         muros.draw(ventana)
         booster.draw(ventana)
@@ -324,10 +322,6 @@ if __name__ == '__main__':
         totems.draw(ventana)
         info_vidas = info.render(vidas,True,BLANCO)
         ventana.blit(info_vidas,[10,10])
-=======
-        speed.draw(ventana)
-        health.draw(ventana)
->>>>>>> 6a436b04cfd8008234f17256524a2858cf1a07d5:juego.py
 
         pygame.display.flip()
         reloj.tick(40)
