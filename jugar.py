@@ -5,7 +5,6 @@ from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
 from sprites import *
-from bala import Bala
 from velocidad import Velocidad
 from salud import Salud
 
