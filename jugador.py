@@ -90,25 +90,25 @@ class Jugador(pygame.sprite.Sprite):
     def mayo_rakuin(self):
          if self.inventario[2] > 0:
              self.estado = 2
-             self.velx *= 2 # sería conveniente que esto esté en el código del juego
-             self.vely *= 2 # y se dé cuando el estado pase a 2
+             #self.velx *= 2
+             #self.vely *= 2
 
     #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
     def objetos(self):
-        if self.inventario[0] == 2:
+        if self.inventario[0] == 2: 
             self.estado = 5
 
     # Muerte ; cuando las vidas llegan a 0
     def morir(self):
          if self.vidas <= 0:
              #verifica si tiene un totem, si es así le suma 3 vidas y le quita el totem del inventario
-            if self.inventario[1] > 0:
+            if self.inventario[1] == 1:
                 self.estado = 3
-                self.vidas = 2
-                self.inventario[1] -= 1
+                self.vidas = 3
+                self.inventario[1] = 0
                 #self.estado = 1
             #si no se muere :p
-            if self.inventario[1] <= 0:
+            else:
                 self.detener()
                 self.estado = 7
 

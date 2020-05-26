@@ -4,6 +4,7 @@ from constantes import *
 from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
+<<<<<<< HEAD:jugar.py
 from sprites import *
 
 class Creacion(pygame.sprite.Sprite):
@@ -25,6 +26,11 @@ class Creacion(pygame.sprite.Sprite):
             pared.add(p6)
         m = Muro([-270,50])
         muros.add(m)
+=======
+from bala import Bala
+from velocidad import Velocidad
+from salud import Salud
+>>>>>>> 6a436b04cfd8008234f17256524a2858cf1a07d5:juego.py
 
 if __name__ == '__main__':
     pygame.init()
@@ -65,6 +71,7 @@ if __name__ == '__main__':
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     balas = pygame.sprite.Group()
+<<<<<<< HEAD:jugar.py
     pared = pygame.sprite.Group()
     muros = pygame.sprite.Group()
     booster = pygame.sprite.Group()
@@ -77,6 +84,10 @@ if __name__ == '__main__':
 
     #Llamado a clase para crear todos los sprites
     Creacion(pared,muros,booster,el1,el2,genera,lava,vidaBarra,totems)
+=======
+    speed = pygame.sprite.Group()
+    health = pygame.sprite.Group()
+>>>>>>> 6a436b04cfd8008234f17256524a2858cf1a07d5:juego.py
 
     #Creacion personaje principal
     cosa=Jugador([300,200])
@@ -90,12 +101,12 @@ if __name__ == '__main__':
     r1=Enemigo1([x1,y1])
     rivales1.add(r1)
 
-    '''n=4
-    for a in range(n):
-        x = random.randrange(ANCHO-150)
-        y = random.randrange((ALTO-150))
-        r1 = Enemigo1([x,y])
-        rivales1.add(r1)'''
+    v = Velocidad([50,50])
+    speed.add(v)
+
+    s = Salud([600,600])
+    health.add(s)
+
 
     #Creacion de enemigo tipo 2
     x2 = random.randrange(ANCHO-150)
@@ -167,6 +178,10 @@ if __name__ == '__main__':
                         b.velx = -5
                         b.vely = 0
                     balas.add(b)
+                #verifica si tiene modificador PERO solo funciona en el primer movimiento
+                if cosa.estado == 2:
+                    cosa.velx *= 2
+                    cosa.vely *= 2
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
@@ -254,6 +269,16 @@ if __name__ == '__main__':
 
         impacto = False
 
+        #modificadores
+        sal = pygame.sprite.spritecollide(s,jugadores,False)
+        vel = pygame.sprite.spritecollide(v,jugadores,False)
+        if sal:
+            cosa.inventario[1] = 1
+            health.remove(s)
+        if vel:
+            cosa.inventario[2] = 1
+            speed.remove(v)
+            cosa.mayo_rakuin()
 
         #fin del juego
         cosa.morir()
@@ -287,6 +312,7 @@ if __name__ == '__main__':
         balas.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
+<<<<<<< HEAD:jugar.py
         pared.draw(ventana)
         muros.draw(ventana)
         booster.draw(ventana)
@@ -298,6 +324,10 @@ if __name__ == '__main__':
         totems.draw(ventana)
         info_vidas = info.render(vidas,True,BLANCO)
         ventana.blit(info_vidas,[10,10])
+=======
+        speed.draw(ventana)
+        health.draw(ventana)
+>>>>>>> 6a436b04cfd8008234f17256524a2858cf1a07d5:juego.py
 
         pygame.display.flip()
         reloj.tick(40)
