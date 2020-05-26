@@ -81,6 +81,8 @@ if __name__ == '__main__':
     #Creacion personaje principal
     cosa=Jugador([300,200])
     jugadores.add(cosa)
+    cosa.bloques = muros
+    cosa.pared = pared
 
     #Creacion de enemigo tipo 1
     x1 = random.randrange(ANCHO-150)
@@ -278,6 +280,7 @@ if __name__ == '__main__':
         balas.update()
         rivales2.update()
         pared.update()
+        muros.update()
         #ventana.fill(NEGRO)
         ventana.blit(fondo,[f_posx,0])
         jugadores.draw(ventana)

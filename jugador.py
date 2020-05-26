@@ -15,13 +15,51 @@ class Jugador(pygame.sprite.Sprite):
         self.vidas = 5
         self.estado = 1 #1 estándar, 2 velocidad, 3 totem, 4 disparo, 5 con los 2 objetos, 6 en llamas, 7 muerto
         self.llamas = 0
+        self.bloques = None
+        self.pared = None
         self.inventario = [0,0,0] #objetos, tótem, buff
         self.mover(0,0)
 
 
     def update(self):
+        #Colision en x
         self.rect.x += self.velx
+        ls_col = pygame.sprite.spritecollide(self,self.bloques,False)
+        ls_col2 = pygame.sprite.spritecollide(self,self.pared,False)
+        for b in ls_col:
+            if (self.rect.right > b.rect.left) and (self.velx > 0):
+                self.rect.right = b.rect.left
+                self.velx = 0
+            if (self.rect.left < b.rect.right) and (self.velx < 0):
+                self.rect.left = b.rect.right
+                self.velx = 0
+
+        for m in ls_col2:
+            if (self.rect.right > m.rect.left) and (self.velx > 0):
+                self.rect.right = m.rect.left
+                self.velx = 0
+            if (self.rect.left < m.rect.right) and (self.velx < 0):
+                self.rect.left = m.rect.right
+                self.velx = 0
+        #Colision en y
         self.rect.y += self.vely
+        ls_col = pygame.sprite.spritecollide(self,self.bloques,False)
+        ls_col2 = pygame.sprite.spritecollide(self,self.pared,False)
+        for b in ls_col:
+            if (self.rect.top < b.rect.bottom) and (self.vely < 0):
+                self.rect.top = b.rect.bottom
+                self.vely = 0
+            if (self.rect.bottom > b.rect.top) and (self.vely > 0):
+                self.rect.bottom = b.rect.top
+                self.vely = 0
+
+        for m in ls_col2:
+            if (self.rect.top < m.rect.bottom) and (self.vely < 0):
+                self.rect.top = m.rect.bottom
+                self.vely = 0
+            if (self.rect.bottom > m.rect.top) and (self.vely > 0):
+                self.rect.bottom = m.rect.top
+                self.vely = 0
 
     def mover(self,x,y):
         self.velx = x
