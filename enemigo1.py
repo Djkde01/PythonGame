@@ -15,9 +15,12 @@ class Enemigo1(Enemigo):
         self.velx = 0
         self.vely = 0
         self.f_velxs = 0
+        self.radius = 60
         self.vidas = 3
         self.damage = 1
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
+        self.bloques = None
+        self.pared = None
 
     def RetPos(self):
         x = self.rect.x + 20
@@ -45,11 +48,11 @@ class Enemigo1(Enemigo):
 
     #si llega hasta alguno de los bordes cambiará la dirección en la que iba hacia el lado contrario
     def rebotar(self):
-        if self.rect.right >= ANCHO:
-                self.velx *= -1
-        if self.rect.left <= 0:
-                self.velx *= -1
-        if self.rect.top <= 0:
-                self.vely *= -1
-        if self.rect.bottom >= ALTO:
-                self.vely *= -1
+        self.rect.x += self.velx
+        ls_col = pygame.sprite.spritecollide(self,self.bloques,False)
+        ls_col2 = pygame.sprite.spritecollide(self,self.pared,False)
+        if ls_col:
+            self.velx *= -1
+
+        if ls_col2:
+            self.velx *= -1

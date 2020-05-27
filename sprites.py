@@ -96,10 +96,12 @@ class Generados(pygame.sprite.Sprite):
        self.rect.y = pos[1]
        self.velx = 0
        self.vely = 0
+       self.f_velxs = 0
 
    def update(self):
        self.rect.x = self.rect.x + self.velx
        self.rect.y = self.rect.y + self.vely
+       self.rect.x += self.f_velxs
 
 #Elemento lava,
 class Lava(pygame.sprite.Sprite):
@@ -128,7 +130,7 @@ class Muro(pygame.sprite.Sprite):
         self.rect.x += self.f_velxs
 
 #Elemento vida, le da un corazon de vida al jugador
-class BarraVida(pygame.sprite.Sprite):
+class Vida(pygame.sprite.Sprite):
    def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("vida.png")

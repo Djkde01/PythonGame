@@ -8,6 +8,7 @@ from sprites import *
 
 class Creacion(pygame.sprite.Sprite):
     def __init__(self,pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem):
+        #Creacion de paredes
         for i in range (16):
             p = Pared([-800,i*50])
             p2 = Pared([1550,i*50])
@@ -23,8 +24,105 @@ class Creacion(pygame.sprite.Sprite):
             p6 = Pared([-j*50,750])
             pared.add(p5)
             pared.add(p6)
-        m = Muro([-270,50])
+        #Creacion de muros
+        for i in range(7):
+            m = Muro([(30*i)-750,460])
+            muros.add(m)
+        for i in range(9):
+            m = Muro([-266,(i*30)+50])
+            muros.add(m)
+        for i in range(8):
+            m = Muro([(i*30)-266,290])
+            muros.add(m)
+        for i in range(6):
+            m = Muro([-130,(i*30)+570])
+            muros.add(m)
+        for i in range(13):
+            m = Muro([(i*30)-100,570])
+            muros.add(m)
+        for i in range(6):
+            m = Muro([260,(i*30)+390])
+            muros.add(m)
+        m = Muro([360,720])
         muros.add(m)
+        m = Muro([430,720])
+        muros.add(m)
+
+        #Creacion de generadores
+        g1=Generador([-750,430])
+        gen.add(g1)
+        g2 = Generador([-100,720])
+        gen.add(g2)
+        g3 = Generador([-400,720])
+        gen.add(g3)
+
+        #Creacion de suelo de Lava
+        cont = 0
+        for i in range(5):
+            l = Lava([(-434)+cont,(i*30)+50])
+            lava.add(l)
+            cont+=15
+        for i in range(3):
+            l = Lava([-374,(i*30)+200])
+            lava.add(l)
+        cont = 0
+        for i in range(4):
+            l = Lava([(-390)+cont,(i*30)+290])
+            lava.add(l)
+            cont -= 15
+        cont = 0
+        for i in range(2):
+            l = Lava([(-530)+cont,(i*30)+400])
+            lava.add(l)
+            cont -= 10
+        cont = 0
+        for i in range(3):
+            l = Lava([(-590)+cont,(i*30)+310])
+            lava.add(l)
+            cont += 30
+        cont = 0
+        for i in range(6):
+            l = Lava([(-740)+cont,(i*30)+130])
+            lava.add(l)
+            cont += 10
+        l = Lava([-30,290])
+        lava.add(l)
+        for i in range(3):
+            l = Lava([27,(i*30)+50])
+            lava.add(l)
+        for i in range(3):
+            l = Lava([42,(i*30)+140])
+            lava.add(l)
+        for i in range(9):
+            l = Lava([325+cont,(i*30)+120])
+            lava.add(l)
+            cont -= 15
+        cont = 0
+        for i in range(2):
+            l = Lava([264,(i*30)+50])
+            lava.add(l)
+        for i in range(6):
+            l = Lava([249+cont,(i*30)+110])
+            lava.add(l)
+            cont -=15
+        l = Lava([150,280])
+        lava.add(l)
+        #Creacion de gemas(elementos)
+        t = Elem1([-580,430])
+        totem.add(t)
+        t2 = Elem2([1520,720])
+        totem.add(t2)
+        #Creacion de Vidas
+        v = Vida([234,50])
+        vidaBarra.add(v)
+
+        #Creacion de boosters(velocidad)
+        b = Boost([1520,680])
+        booster.add(b)
+
+        #Creacion de totem vida
+        t = Totem([1500,50])
+        totem.add(t)
 
 
 if __name__ == '__main__':
@@ -56,53 +154,63 @@ if __name__ == '__main__':
     f_info = fondo.get_rect()
     f_velx = 0
     f_posx = -800
-    lim_der = 720
+    lim_der = 710
     lim_izq = 50
     f_lim_izq = 0
     f_lim_der = ANCHO - f_info[2]
 
     #Grupos
+    #Jugador
     jugadores = pygame.sprite.Group()
+    #Rivales base
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
+    #Balas generadas por el jugador
     balas = pygame.sprite.Group()
+    #Limite mapa
     pared = pygame.sprite.Group()
+    #Muros
     muros = pygame.sprite.Group()
+    #Incremento de velocidad
     booster = pygame.sprite.Group()
+    #Elementos, gemas, que debe recoger el jugador
     el1 = pygame.sprite.Group()
     el2 = pygame.sprite.Group()
+    #Generador de enemigos
     gen = pygame.sprite.Group()
+    #Suelo de lava
     lava = pygame.sprite.Group()
+    #Corazon, una vida mas al jugador
     vidaBarra = pygame.sprite.Group()
+    #Resurreccion
     totem = pygame.sprite.Group()
-    speed = pygame.sprite.Group()
-    health = pygame.sprite.Group()
+    #Enemigos creados a partir del generador
     enemy = pygame.sprite.Group()
 
     #Llamado a clase para crear todos los sprites
     Creacion(pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem)
 
     #Creacion personaje principal
-    cosa=Jugador([300,200])
+    cosa=Jugador([390,690])
     jugadores.add(cosa)
     cosa.bloques = muros
     cosa.pared = pared
 
-    #Creacion de generadores
-    g1=Generador([100,100])
-    gen.add(g1)
-
     #Creacion de enemigo tipo 1
-    x1 = random.randrange(ANCHO-150)
-    y1 = random.randrange((ALTO-150))
-    r1=Enemigo1([x1,y1])
+    #x1 = random.randrange(ANCHO-150)
+    #y1 = random.randrange((ALTO-150))
+    r1=Enemigo1([400,400])
     rivales1.add(r1)
+    r1.bloques = muros
+    r1.pared = pared
 
     #Creacion de enemigo tipo 2
-    x2 = random.randrange(ANCHO-150)
-    y2 = random.randrange((ALTO-150))
-    r2=Enemigo2([x2,y2])
+    #x2 = random.randrange(ANCHO-150)
+    #y2 = random.randrange((ALTO-150))
+    r2=Enemigo2([500,400])
     rivales2.add(r2)
+    r2.bloques = muros
+    r2.pared = pared
 
     #Texto control vidas jugador
     info = pygame.font.Font(None,30)
@@ -126,7 +234,7 @@ if __name__ == '__main__':
         for g in gen:
             if g.temp < 0:
                 direccion = random.randrange(500)
-                r = Generados(g1.rect.center)
+                r = Generados(g.rect.center)
                 if direccion < 125:
                     r.velx = 5
                 elif direccion < 250:
@@ -234,12 +342,15 @@ if __name__ == '__main__':
             r1.f_velxs = f_velx
         for r2 in rivales2:
             r2.f_velxs = f_velx
+        for en in enemy:
+            en.f_velxs = f_velx
 
         #Limpieza de memoria balas
         for b in balas:
             #Deteccion de colision entre bala y enemigo
             disp = pygame.sprite.spritecollide(b,rivales1,False)
             disp2 = pygame.sprite.spritecollide(b,rivales2,False)
+            choq_mur = pygame.sprite.spritecollide(b,muros,False)
             #Eliminacion al salir de pantalla
             if b.rect.y < -50:
                 balas.remove(b)
@@ -259,6 +370,17 @@ if __name__ == '__main__':
                 balas.remove(b)
                 r2.vidas -=1
                 print("Enemy 2:",r2.vidas)
+            for m in choq_mur:
+                balas.remove(b)
+
+        #Limpieza enemigos creados en generadores, se eliminan al chocar con un muro
+        for r in enemy:
+            mur = pygame.sprite.spritecollide(r,muros,False)
+            pare = pygame.sprite.spritecollide(r,pared,False)
+            for m in mur:
+                enemy.remove(r)
+            for f in pare:
+                enemy.remove(r)
 
         #Colision entre enemigo y jugador
         impacto = False
@@ -337,8 +459,6 @@ if __name__ == '__main__':
         rivales1.draw(ventana)
         rivales2.draw(ventana)
         enemy.draw(ventana)
-        speed.draw(ventana)
-        health.draw(ventana)
         muros.draw(ventana)
         vidaBarra.draw(ventana)
         booster.draw(ventana)

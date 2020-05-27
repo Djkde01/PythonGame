@@ -4,7 +4,7 @@ from constantes import *
 class Jugador(pygame.sprite.Sprite):
     def __init__ (self,pos):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([60,60])
+        self.image = pygame.Surface([40,60])
         self.image.fill(BLANCO)
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
@@ -30,7 +30,7 @@ class Jugador(pygame.sprite.Sprite):
             if (self.rect.right > b.rect.left) and (self.velx > 0):
                 self.rect.right = b.rect.left
                 self.velx = 0
-            if (self.rect.left < b.rect.right) and (self.velx < 0):
+            elif (self.rect.left < b.rect.right) and (self.velx < 0):
                 self.rect.left = b.rect.right
                 self.velx = 0
 
@@ -38,7 +38,7 @@ class Jugador(pygame.sprite.Sprite):
             if (self.rect.right > m.rect.left) and (self.velx > 0):
                 self.rect.right = m.rect.left
                 self.velx = 0
-            if (self.rect.left < m.rect.right) and (self.velx < 0):
+            elif (self.rect.left < m.rect.right) and (self.velx < 0):
                 self.rect.left = m.rect.right
                 self.velx = 0
         #Colision en y
@@ -49,7 +49,7 @@ class Jugador(pygame.sprite.Sprite):
             if (self.rect.top < b.rect.bottom) and (self.vely < 0):
                 self.rect.top = b.rect.bottom
                 self.vely = 0
-            if (self.rect.bottom > b.rect.top) and (self.vely > 0):
+            elif (self.rect.bottom > b.rect.top) and (self.vely > 0):
                 self.rect.bottom = b.rect.top
                 self.vely = 0
 
@@ -57,7 +57,7 @@ class Jugador(pygame.sprite.Sprite):
             if (self.rect.top < m.rect.bottom) and (self.vely < 0):
                 self.rect.top = m.rect.bottom
                 self.vely = 0
-            if (self.rect.bottom > m.rect.top) and (self.vely > 0):
+            elif (self.rect.bottom > m.rect.top) and (self.vely > 0):
                 self.rect.bottom = m.rect.top
                 self.vely = 0
 
@@ -95,7 +95,7 @@ class Jugador(pygame.sprite.Sprite):
 
     #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
     def objetos(self):
-        if self.inventario[0] == 2: 
+        if self.inventario[0] == 2:
             self.estado = 5
 
     # Muerte ; cuando las vidas llegan a 0
