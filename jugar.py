@@ -363,6 +363,7 @@ if __name__ == '__main__':
             #Deteccion de colision entre bala y enemigo
             disp = pygame.sprite.spritecollide(b,rivales1,False)
             disp2 = pygame.sprite.spritecollide(b,rivales2,False)
+            disp3 = pygame.sprite.spritecollide(b,enemy,True)
             choq_mur = pygame.sprite.spritecollide(b,muros,False)
             #Eliminacion al salir de pantalla
             if b.rect.y < -50:
@@ -375,7 +376,7 @@ if __name__ == '__main__':
                 balas.remove(b)
             #Eliminacion al hacer colision con un enemigo y se reduce
             #la vida de ese enemigo
-            for r in disp:
+            for r1 in disp:
                 balas.remove(b)
                 r1.vidas -=1
                 print("Enemy 1:",r1.vidas)
@@ -385,6 +386,12 @@ if __name__ == '__main__':
                 print("Enemy 2:",r2.vidas)
             for m in choq_mur:
                 balas.remove(b)
+
+        for r in enemy:
+            en = pygame.sprite.spritecollide(r,jugadores,False)
+            if en:
+                cosa.detener()
+                r.detener()
 
         #Limpieza enemigos creados en generadores, se eliminan al chocar con un muro
         for r in enemy:

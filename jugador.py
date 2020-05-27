@@ -106,17 +106,16 @@ class Jugador(pygame.sprite.Sprite):
     def morir(self):
          if self.vidas <= 0:
              #verifica si tiene un totem, si es así le suma 3 vidas y le quita el totem del inventario
-            if self.inventario[1] == 1:
-                self.estado = 3
+            if self.inventario[1] > 0:
                 self.vidas = 3
-                self.inventario[1] = 0
+                self.inventario[1] -= 1
                 #self.estado = 1
             #si no se muere :p
             else:
                 self.detener()
                 self.estado = 7
 
-    #Si está quemandose la velocidad se reduce
+    #Si está quemandose la velocidad s---e reduce
     def quemado(self):
         if self.llamas == 1:
             self.estado = 6

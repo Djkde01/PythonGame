@@ -87,7 +87,7 @@ class Generador(pygame.sprite.Sprite):
 
 #Elemento enemigos, se crean a partir de los generadores cada cierto tiempo
 class Generados(pygame.sprite.Sprite):
-   def __init__(self,pos):
+    def __init__(self,pos):
        pygame.sprite.Sprite.__init__(self)
        self.image = pygame.Surface([10,10])
        self.image.fill(NEGRO)
@@ -98,10 +98,15 @@ class Generados(pygame.sprite.Sprite):
        self.vely = 0
        self.f_velxs = 0
 
-   def update(self):
-       self.rect.x = self.rect.x + self.velx
-       self.rect.y = self.rect.y + self.vely
-       self.rect.x += self.f_velxs
+    def update(self):
+        self.rect.x = self.rect.x + self.velx
+        self.rect.y = self.rect.y + self.vely
+        self.rect.x += self.f_velxs
+
+    def detener(self):
+        self.velx=0
+        self.vely=0
+
 
 #Elemento lava,
 class Lava(pygame.sprite.Sprite):
