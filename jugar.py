@@ -108,10 +108,10 @@ class Creacion(pygame.sprite.Sprite):
         l = Lava([150,280])
         lava.add(l)
         #Creacion de gemas(elementos)
-        t = Elem1([-580,430])
-        totem.add(t)
-        t2 = Elem2([1520,720])
-        totem.add(t2)
+        e = Elem1([-580,430])
+        el2.add(e)
+        e2 = Elem2([1520,720])
+        el2.add(e2)
         #Creacion de Vidas
         v = Vida([234,50])
         vidaBarra.add(v)
@@ -309,10 +309,6 @@ if __name__ == '__main__':
                         b.vely = 0
                         cosa.accion = 2
                     balas.add(b)
-                #verifica si tiene modificador PERO solo funciona en el primer movimiento
-                if cosa.estado == 2:
-                    cosa.velx *= 2
-                    cosa.vely *= 2
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
@@ -420,18 +416,34 @@ if __name__ == '__main__':
             print ("impacto: ",impacto)
             vidas = "Vidas: " + str(cosa.vidas)
 
-        impacto = False
+        #colision con los objetos
 
-        #modificadores
-        '''sal = pygame.sprite.spritecollide(s,jugadores,False)
-        vel = pygame.sprite.spritecollide(v,jugadores,False)
-        if sal:
-            cosa.inventario[1] = 1
-            health.remove(s)
-        if vel:
-            cosa.inventario[2] = 1
-            speed.remove(v)
-            cosa.mayo_rakuin()'''
+        boo = pygame.sprite.spritecollide(cosa,booster,True)
+        if boo:
+            cosa.inventario[2] += 1
+        cosa.mayo_rakuin()
+
+        gem1 = pygame.sprite.spritecollide(cosa,el1,True)
+        gem2 = pygame.sprite.spritecollide(cosa,el2,True)
+        if gem1 or gem2:
+            cosa.inventario[0] +=1
+
+        lav = pygame.sprite.spritecollide(cosa,lava,False)
+        if lav:
+            cosa.llamas = 1
+        cosa.quemado()
+
+        cor = pygame.sprite.spritecollide(cosa,vidaBarra,True)
+        if cor:
+            cosa.vidas += 1
+            print("vidas =", cosa.vidas)
+
+        tot = pygame.sprite.spritecollide(cosa,totem,True)
+        if tot:
+            cosa.inventario[1] += 1
+            print("totem", cosa.inventario[1])
+
+        impacto = False
 
         #fin del juego
         cosa.morir()

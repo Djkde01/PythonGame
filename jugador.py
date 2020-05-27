@@ -28,7 +28,9 @@ class Jugador(pygame.sprite.Sprite):
             self.con += 1
         else:
             self.con = 0
+            self.accion = self.accion
         self.image = self.animacion[self.accion][self.con]
+
 
     def update(self):
         #Colision en x
@@ -89,9 +91,11 @@ class Jugador(pygame.sprite.Sprite):
     #cuando recoge el buff activa el estado de velocidad
     def mayo_rakuin(self):
          if self.inventario[2] > 0:
+             self.llamas = 0
              self.estado = 2
-             #self.velx *= 2
-             #self.vely *= 2
+             self.velx *= 1.05
+             self.vely *= 1.05
+             self.inventario[2] -= 1
 
     #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
     def objetos(self):
@@ -116,5 +120,5 @@ class Jugador(pygame.sprite.Sprite):
     def quemado(self):
         if self.llamas == 1:
             self.estado = 6
-            self.velx -= 3 #sería conveniente que esto esté en el código del juego
-            self.vely -= 3 #y se dé cuando el estado pase a 6
+            self.velx *= 0.9
+            self.vely *= 0.9
