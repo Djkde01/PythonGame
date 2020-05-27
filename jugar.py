@@ -124,7 +124,6 @@ class Creacion(pygame.sprite.Sprite):
         t = Totem([1500,50])
         totem.add(t)
 
-
 if __name__ == '__main__':
     pygame.init()
     ventana=pygame.display.set_mode([ANCHO,ALTO])
@@ -191,7 +190,17 @@ if __name__ == '__main__':
     Creacion(pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem)
 
     #Creacion personaje principal
-    cosa=Jugador([390,690])
+    player_spr = pygame.image.load("SpritesPlayer.png")
+
+    m = []
+    for f in range(8):
+        fila=[]
+        for c in range(8):
+            cuadro = player_spr.subsurface(40*c,60*f,40,60)
+            fila.append(cuadro)
+        m.append(fila)
+
+    cosa=Jugador([390,690],m)
     jugadores.add(cosa)
     cosa.bloques = muros
     cosa.pared = pared
@@ -262,18 +271,22 @@ if __name__ == '__main__':
                     cosa.mover(5,0)
                     cosa.estado = 1
                     cosa.dir = 1
+                    cosa.accion = 1
                 if event.key == pygame.K_LEFT:
                     cosa.mover(-5,0)
                     cosa.estado = 1
                     cosa.dir = 3
+                    cosa.accion = 0
                 if event.key == pygame.K_UP:
                     cosa.mover(0,-5)
                     cosa.estado = 1
                     cosa.dir = 0
+                    cosa.accion = 4
                 if event.key == pygame.K_DOWN:
                     cosa.mover(0,5)
                     cosa.estado = 1
                     cosa.dir = 2
+                    cosa.accion = 5
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
                     cosa.estado = 4
@@ -282,15 +295,19 @@ if __name__ == '__main__':
                     if cosa.dir == 0:
                         b.velx = 0
                         b.vely = -5
+                        cosa.accion = 6
                     if cosa.dir == 1:
                         b.velx = 5
                         b.vely = 0
+                        cosa.accion = 3
                     if cosa.dir == 2:
                         b.velx = 0
                         b.vely = 5
+                        cosa.accion = 7
                     if cosa.dir == 3:
                         b.velx = -5
                         b.vely = 0
+                        cosa.accion = 2
                     balas.add(b)
                 #verifica si tiene modificador PERO solo funciona en el primer movimiento
                 if cosa.estado == 2:

@@ -2,13 +2,16 @@ import pygame
 from constantes import *
 
 class Jugador(pygame.sprite.Sprite):
-    def __init__ (self,pos):
+    def __init__ (self,pos,m):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([40,60])
-        self.image.fill(BLANCO)
+        self.accion = 1
+        self.con = 0
+        self.animacion = m
+        self.image = self.animacion[self.accion][self.con]
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+        self.lim = [7,7,2,2,7,7,2,2]
         self.dir = 0 #0:arriba, 1:derecha, 2:abajo, 3:izquierda
         self.velx = 0
         self.vely = 0
@@ -20,6 +23,12 @@ class Jugador(pygame.sprite.Sprite):
         self.inventario = [0,0,0] #objetos, tótem, buff
         self.mover(0,0)
 
+    def animar(self):
+        if self.con < self.lim[self.accion]:
+            self.con += 1
+        else:
+            self.con = 0
+        self.image = self.animacion[self.accion][self.con]
 
     def update(self):
         #Colision en x
@@ -61,6 +70,8 @@ class Jugador(pygame.sprite.Sprite):
                 self.rect.bottom = m.rect.top
                 self.vely = 0
 
+        self.animar()
+
     def mover(self,x,y):
         self.velx = x
         self.vely = y
@@ -74,17 +85,6 @@ class Jugador(pygame.sprite.Sprite):
         self.velx=0
         self.vely=0
         self.estado = 1
-
-    #Control ; cuando llega a los extremos no permite que pase de los límites y solo se mueve cuando se dirija hacia otra dirección
-    '''def bordes(self):
-        if (self.rect.right >= ANCHO) and (self.velx > 0):
-                self.detener()
-        if (self.rect.left <= 0) and (self.velx < 0):
-                self.detener()
-        if (self.rect.top <= 0) and (self.vely < 0):
-                self.detener()
-        if (self.rect.bottom >= ALTO) and (self.vely > 0):
-                self.detener()'''
 
     #cuando recoge el buff activa el estado de velocidad
     def mayo_rakuin(self):
