@@ -14,6 +14,7 @@ class Enemigo2(Enemigo):
         self.type = "rival2"
         self.velx = 0
         self.vely = 0
+        self.f_velxs = 0
         self.vidas = 1
         self.damage = 3
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
@@ -36,6 +37,7 @@ class Enemigo2(Enemigo):
     def update(self):
         self.rect.x += self.velx
         self.rect.y += self.vely
+        self.rect.x += self.f_velxs
 
     def mover(self):
         self.vely = random.randrange(-10,11)

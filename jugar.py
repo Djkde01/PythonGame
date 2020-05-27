@@ -4,14 +4,10 @@ from constantes import *
 from jugador import Jugador
 from enemigo1 import Enemigo1
 from enemigo2 import Enemigo2
-from generador1 import Generador1
-from generador2 import Generador2
 from sprites import *
-from velocidad import Velocidad
-from salud import Salud
 
 class Creacion(pygame.sprite.Sprite):
-    def __init__(self,pared,muros,booster,el1,el2,gen1,gen2,lava,vidaBarra,totems):
+    def __init__(self,pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem):
         for i in range (16):
             p = Pared([-800,i*50])
             p2 = Pared([1550,i*50])
@@ -70,23 +66,21 @@ if __name__ == '__main__':
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     balas = pygame.sprite.Group()
-
     pared = pygame.sprite.Group()
     muros = pygame.sprite.Group()
     booster = pygame.sprite.Group()
     el1 = pygame.sprite.Group()
     el2 = pygame.sprite.Group()
-    gen1 = pygame.sprite.Group()
-    gen2 = pygame.sprite.Group()
+    gen = pygame.sprite.Group()
     lava = pygame.sprite.Group()
     vidaBarra = pygame.sprite.Group()
-    totems = pygame.sprite.Group()
+    totem = pygame.sprite.Group()
     speed = pygame.sprite.Group()
     health = pygame.sprite.Group()
+    enemy = pygame.sprite.Group()
 
     #Llamado a clase para crear todos los sprites
-    Creacion(pared,muros,booster,el1,el2,gen1,gen2,lava,vidaBarra,totems)
-
+    Creacion(pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem)
 
     #Creacion personaje principal
     cosa=Jugador([300,200])
@@ -94,30 +88,21 @@ if __name__ == '__main__':
     cosa.bloques = muros
     cosa.pared = pared
 
-
-    g1=Generador1([100,100])
-    gen1.add(g1)
-    g2=Generador2([650,650])
-    gen2.add(g2)
+    #Creacion de generadores
+    g1=Generador([100,100])
+    gen.add(g1)
 
     #Creacion de enemigo tipo 1
-    '''x1 = random.randrange(ANCHO-150)
+    x1 = random.randrange(ANCHO-150)
     y1 = random.randrange((ALTO-150))
     r1=Enemigo1([x1,y1])
-    rivales1.add(r1)'''
-
-    v = Velocidad([50,50])
-    speed.add(v)
-
-    s = Salud([600,600])
-    health.add(s)
-
+    rivales1.add(r1)
 
     #Creacion de enemigo tipo 2
-    '''x2 = random.randrange(ANCHO-150)
+    x2 = random.randrange(ANCHO-150)
     y2 = random.randrange((ALTO-150))
     r2=Enemigo2([x2,y2])
-    rivales2.add(r2)'''
+    rivales2.add(r2)
 
     #Texto control vidas jugador
     info = pygame.font.Font(None,30)
@@ -138,32 +123,20 @@ if __name__ == '__main__':
     #Ciclo principal de juego
     while (not fin) and (not fin_juego):
         #creacion enemigos
-        for g1 in gen1:
-                if g1.temp > 0:
-                    direccion = random.randrange(500)
-                    r1 = Enemigo1([100,100])
-                    if direccion < 125:
-                        r1.velx = 5
-                    elif direccion < 250:
-                        r1.velx = -5
-                    elif direccion < 375:
-                        r1.vely = 5
-                    elif direccion < 500:
-                        r1.vely = -5
-                    rivales1.add(r1)
-        for g2 in gen2:
-                    if g2.temp > 0:
-                        direccion = random.randrange(500)
-                        r2 = Enemigo2([650,650])
-                        if direccion < 125:
-                            r2.velx = 5
-                        elif direccion < 250:
-                            r2.velx = -5
-                        elif direccion < 375:
-                            r2.vely = 5
-                        elif direccion < 500:
-                            r2.vely = -5
-                        rivales2.add(r2)
+        for g in gen:
+            if g.temp < 0:
+                direccion = random.randrange(500)
+                r = Generados(g1.rect.center)
+                if direccion < 125:
+                    r.velx = 5
+                elif direccion < 250:
+                    r.velx = -5
+                elif direccion < 375:
+                    r.vely = 5
+                elif direccion < 500:
+                    r.vely = -5
+                enemy.add(r)
+                g.temp = random.randrange(50)
 
         #control de los enemigos
         for r1 in rivales1:
@@ -249,14 +222,18 @@ if __name__ == '__main__':
             e.f_velxs = f_velx
         for h in el2:
             h.f_velxs = f_velx
-        for g1 in gen1:
-            g1.f_velxs = f_velx
-        for g2 in gen2:
-            g2.f_velxs = f_velx
+        for g in gen:
+            g.f_velxs = f_velx
         for l in lava:
             l.f_velxs = f_velx
-        for t in totems:
+        for t in totem:
             t.f_velxs = f_velx
+        for v in vidaBarra:
+            v.f_velxs = f_velx
+        for r1 in rivales1:
+            r1.f_velxs = f_velx
+        for r2 in rivales2:
+            r2.f_velxs = f_velx
 
         #Limpieza de memoria balas
         for b in balas:
@@ -293,19 +270,21 @@ if __name__ == '__main__':
             cosa.vely *= -1
             cosa.vidas -= 1
             print ("Vidas: ", cosa.vidas)
+            print ("impacto: ",impacto)
             vidas = "Vidas: " + str(cosa.vidas)
         if col2:
             impacto = True
             cosa.velx *= -1
             cosa.vely *= -1
-            cosa.vidas -= 1
+            cosa.vidas -= 3
             print ("Vidas: ", cosa.vidas)
+            print ("impacto: ",impacto)
             vidas = "Vidas: " + str(cosa.vidas)
 
         impacto = False
 
         #modificadores
-        sal = pygame.sprite.spritecollide(s,jugadores,False)
+        '''sal = pygame.sprite.spritecollide(s,jugadores,False)
         vel = pygame.sprite.spritecollide(v,jugadores,False)
         if sal:
             cosa.inventario[1] = 1
@@ -313,7 +292,7 @@ if __name__ == '__main__':
         if vel:
             cosa.inventario[2] = 1
             speed.remove(v)
-            cosa.mayo_rakuin()
+            cosa.mayo_rakuin()'''
 
         #fin del juego
         cosa.morir()
@@ -335,32 +314,42 @@ if __name__ == '__main__':
 
 
         #Refresco
+        #Update de objetos
         jugadores.update()
         rivales1.update()
         balas.update()
         rivales2.update()
         pared.update()
         muros.update()
-        gen1.update()
-        gen2.update()
-        #ventana.fill(NEGRO)
+        gen.update()
+        enemy.update()
+        vidaBarra.update()
+        totem.update()
+        lava.update()
+        el1.update()
+        el2.update()
+        booster.update()
+        #Ubicacion mapa
         ventana.blit(fondo,[f_posx,0])
+        #Dibujo de objetos
         jugadores.draw(ventana)
         balas.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
+        enemy.draw(ventana)
         speed.draw(ventana)
         health.draw(ventana)
-        pared.draw(ventana)
         muros.draw(ventana)
+        vidaBarra.draw(ventana)
         booster.draw(ventana)
+        totem.draw(ventana)
         el1.draw(ventana)
         el2.draw(ventana)
-        gen1.draw(ventana)
-        gen2.draw(ventana)
+        gen.draw(ventana)
         lava.draw(ventana)
+        pared.draw(ventana)
         vidaBarra.draw(ventana)
-        totems.draw(ventana)
+        #Mensaje vidas jugador
         info_vidas = info.render(vidas,True,BLANCO)
         ventana.blit(info_vidas,[10,10])
 
