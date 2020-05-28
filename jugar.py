@@ -206,20 +206,42 @@ if __name__ == '__main__':
     cosa.pared = pared
 
     #Creacion de enemigo tipo 1
-    #x1 = random.randrange(ANCHO-150)
-    #y1 = random.randrange((ALTO-150))
-    r1=Enemigo1([400,400])
+    en1_spr = pygame.image.load("SpritesEnemy1.png")
+    n = []
+    for f1 in range(4):
+        fila1=[]
+        for c1 in range(6):
+            cuadro1 = en1_spr.subsurface(90*c1,60*f1,90,60)
+            fila1.append(cuadro1)
+        n.append(fila1)
+    r1=Enemigo1([400,400],n)
     rivales1.add(r1)
     r1.bloques = muros
     r1.pared = pared
 
     #Creacion de enemigo tipo 2
-    #x2 = random.randrange(ANCHO-150)
-    #y2 = random.randrange((ALTO-150))
-    r2=Enemigo2([500,400])
+    en2_spr = pygame.image.load("SpritesEnemy2.png")
+    o = []
+    for f2 in range(4):
+        fila2=[]
+        for c2 in range(4):
+            cuadro2 = en2_spr.subsurface(90*c2,60*f2,90,60)
+            fila2.append(cuadro2)
+        o.append(fila2)
+    r2=Enemigo2([500,400],o)
     rivales2.add(r2)
     r2.bloques = muros
     r2.pared = pared
+
+    #recorte enemigos generados
+    '''gen_spr = pygame.image.load("SpritesEnemySpawner.png")
+    q = []
+    for f3 in range(4):
+        fila3=[]
+        for c3 in range(4):
+            cuadro3 = gen_spr.subsurface(30*c3,30*f3,30,30)
+            fila3.append(cuadro3)
+        q.append(fila3)'''
 
     #Texto control vidas jugador
     info = pygame.font.Font(None,30)
@@ -264,12 +286,16 @@ if __name__ == '__main__':
                 r = Generados(g.rect.center)
                 if direccion < 125:
                     r.velx = 5
+                    r.accion = 2
                 elif direccion < 250:
                     r.velx = -5
+                    r.accion = 1
                 elif direccion < 375:
                     r.vely = 5
+                    r.accion = 3
                 elif direccion < 500:
                     r.vely = -5
+                    r.accion = 0
                 enemy.add(r)
                 g.temp = random.randrange(50)
 
@@ -406,10 +432,18 @@ if __name__ == '__main__':
                 r2.vidas -= 1
                 print("Enemy 2:",r2.vidas)
                 balas.remove(b)
+            for r in disp3:
+                r.vidas -= 1
+                balas.remove(b)
             if choq_mur:
                 balas.remove(b)
 
         #Si el rival perdio toda su vida, es eliminado
+        for r in enemy:
+            if r.vidas == 0:
+                enemy.remove(r)
+                r.damage = 0
+
         for r1 in rivales1:
             r1.morir()
             if r1.estado == 3:
@@ -427,8 +461,12 @@ if __name__ == '__main__':
         for m in enemy:
             en = pygame.sprite.spritecollide(m,jugadores,False)
             if en:
-                cosa.detener()
                 m.detener()
+                cosa.velx *= -1
+                cosa.vely *= -1
+                cosa.vidas -= r.damage
+                print ("Vidas: ", cosa.vidas)
+                vidas = "Vidas: " + str(cosa.vidas)
 
         #Limpieza enemigos creados en generadores, se eliminan al chocar con un muro
         for r in enemy:

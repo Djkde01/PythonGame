@@ -30,7 +30,6 @@ class Jugador(pygame.sprite.Sprite):
             else:
                 self.con = 0
                 self.accion = self.accion
-
             self.image = self.animacion[self.accion][self.con]
 
 

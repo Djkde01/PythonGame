@@ -4,10 +4,12 @@ from constantes import *
 from enemigo import *
 
 class Enemigo1(Enemigo):
-    def __init__(self,pos):
+    def __init__ (self,pos,m):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([50,50])
-        self.image.fill(AMARILLO)
+        self.accion = 1
+        self.con = 0
+        self.animacion = m
+        self.image = self.animacion[self.accion][self.con]
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
@@ -37,13 +39,29 @@ class Enemigo1(Enemigo):
             self.detener()
             self.estado = 3
 
+    def camino(self):
+        if self.velx != 0:
+            if self.velx < 0:
+                self.accion = 1
+            else:
+                self.accion = 0
+        else:
+            self.accion = 2
+
     def update(self):
         self.rect.x += self.velx
         self.rect.y += self.vely
         self.rect.x += self.f_velxs
+        self.camino()
+        if self.con < 5:
+            self.con += 1
+        else:
+            self.con = 0
+            self.accion = self.accion
+        self.image = self.animacion[self.accion][self.con]
 
     def mover(self):
-        self.velx = random.randrange(-5,6)
+        self.velx = random.randrange(-6,7)
         self.estado = 2
 
     #si llega hasta alguno de los bordes cambiará la dirección en la que iba hacia el lado contrario
