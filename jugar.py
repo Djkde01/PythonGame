@@ -127,6 +127,12 @@ class Creacion(pygame.sprite.Sprite):
 if __name__ == '__main__':
     pygame.init()
     ventana=pygame.display.set_mode([ANCHO,ALTO])
+    disparo = pygame.mixer.Sound("shooting2.wav")
+    win = pygame.mixer.Sound("WinMenu.wav")
+    level = pygame.mixer.Sound("Level.wav")
+    death = pygame.mixer.Sound("DeathMenu.wav")
+    start = pygame.mixer.Sound("MainMenu.wav")
+    pygame.mixer.music.load
 
     #SECCION PREVIA, INICIO
     pygame.font.init()
@@ -142,12 +148,15 @@ if __name__ == '__main__':
                 previo = True
 
         ventana.blit(img_inicio,[0,0])
+        start.play()
         pygame.display.flip()
 
     #SECCION DE CONFIGURACION DE NIVEL
 
     #Carga de mapa
     fondo = pygame.image.load("Map.jpg")
+    start.stop()
+    level.play()
     f_info = fondo.get_rect()
     f_velx = 0
     f_posx = -800
@@ -233,16 +242,6 @@ if __name__ == '__main__':
     r2.bloques = muros
     r2.pared = pared
 
-    #recorte enemigos generados
-    '''gen_spr = pygame.image.load("SpritesEnemySpawner.png")
-    q = []
-    for f3 in range(4):
-        fila3=[]
-        for c3 in range(4):
-            cuadro3 = gen_spr.subsurface(30*c3,30*f3,30,30)
-            fila3.append(cuadro3)
-        q.append(fila3)'''
-
     #Texto control vidas jugador
     info = pygame.font.Font(None,30)
     vidas = "Vidas: " + str(cosa.vidas)
@@ -280,6 +279,14 @@ if __name__ == '__main__':
             victoria = False
 
         #creacion enemigos
+        '''gen_spr = pygame.image.load("SpritesEnemySpawner.png")
+        q = []
+        for f3 in range(4):
+            fila3=[]
+            for c3 in range(4):
+                cuadro3 = gen_spr.subsurface(30*c3,30*f3,30,30)
+                fila3.append(cuadro3)
+            q.append(fila3)'''
         for g in gen:
             if g.temp < 0:
                 direccion = random.randrange(500)
@@ -332,6 +339,7 @@ if __name__ == '__main__':
                     cosa.dir = 2
                     cosa.accion = 5
                 if event.key == pygame.K_s:
+                    disparo.play()
                     #Estado de disparo y creacion de bala
                     cosa.estado = 4
                     pos = cosa.RetPos()
@@ -603,6 +611,8 @@ if __name__ == '__main__':
                 fin = True
 
         ventana.blit(img_fin_loose,[0,0])
+        level.stop()
+        death.play()
         pygame.display.flip()
 
     #SECCION FINAL, FIN JUEGO CON TRIUNFO
@@ -615,4 +625,6 @@ if __name__ == '__main__':
                 fin = True
 
         ventana.blit(img_fin_win,[0,0])
+        level.stop()
+        win.play()
         pygame.display.flip()

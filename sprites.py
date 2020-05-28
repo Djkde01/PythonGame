@@ -107,13 +107,12 @@ class Generados(pygame.sprite.Sprite):
         self.rect.x = self.rect.x + self.velx
         self.rect.y = self.rect.y + self.vely
         self.rect.x += self.f_velxs
-        '''if self.velx != self.vely:
-            if self.con < 3:
-                self.con += 1
-            else:
-                self.con = 0
-                self.accion = self.accion
-            self.image = self.animacion[self.accion][self.con]'''
+        '''if self.con < 3:
+            self.con += 1
+        else:
+            self.con = 0
+            self.accion = self.accion
+        self.image = self.animacion[self.accion][self.con]'''
 
 
     def detener(self):
