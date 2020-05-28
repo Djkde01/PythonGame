@@ -24,12 +24,14 @@ class Jugador(pygame.sprite.Sprite):
         self.mover(0,0)
 
     def animar(self):
-        if self.con < self.lim[self.accion]:
-            self.con += 1
-        else:
-            self.con = 0
-            self.accion = self.accion
-        self.image = self.animacion[self.accion][self.con]
+        if self.velx != self.vely:
+            if self.con < self.lim[self.accion]:
+                self.con += 1
+            else:
+                self.con = 0
+                self.accion = self.accion
+
+            self.image = self.animacion[self.accion][self.con]
 
 
     def update(self):

@@ -149,7 +149,7 @@ if __name__ == '__main__':
     #SECCION DE CONFIGURACION DE NIVEL
 
     #Carga de mapa
-    fondo = pygame.image.load("mapavacio.jpg")
+    fondo = pygame.image.load("mapalimpio.jpg")
     f_info = fondo.get_rect()
     f_velx = 0
     f_posx = -800
@@ -358,6 +358,7 @@ if __name__ == '__main__':
         for en in enemy:
             en.f_velxs = f_velx
 
+
         #Limpieza de memoria balas
         for b in balas:
             #Deteccion de colision entre bala y enemigo
@@ -374,20 +375,34 @@ if __name__ == '__main__':
                 balas.remove(b)
             if b.rect.x > 850:
                 balas.remove(b)
-            #Eliminacion al hacer colision con un enemigo y se reduce
-            #la vida de ese enemigo
+            #Eliminacion de bala al hacer colision con un enemigo y se reduce la vida de este
             for r1 in disp:
-                balas.remove(b)
-                r1.vidas -=1
+                r1.vidas -= 1
                 print("Enemy 1:",r1.vidas)
-            for r2 in disp2:
                 balas.remove(b)
-                r2.vidas -=1
+            for r2 in disp2:
+                r2.vidas -= 1
                 print("Enemy 2:",r2.vidas)
-            for m in choq_mur:
+                balas.remove(b)
+            if choq_mur:
                 balas.remove(b)
 
-        for r in enemy:
+        #Si el rival perdio toda su vida, es eliminado
+        for r1 in rivales1:
+            r1.morir()
+            if r1.estado == 3:
+                rivales1.remove(r1)
+                r1.damage = 0
+                print ("Rival 1 eliminado")
+
+        for r2 in rivales2:
+            r2.morir()
+            if r2.estado == 3:
+                rivales2.remove(r2)
+                r2.damage = 0
+                print ("Rival 2 eliminado")
+
+        for m in enemy:
             en = pygame.sprite.spritecollide(r,jugadores,False)
             if en:
                 cosa.detener()
@@ -407,24 +422,24 @@ if __name__ == '__main__':
         col = pygame.sprite.spritecollide(r1,jugadores,False)
         col2 = pygame.sprite.spritecollide(r2,jugadores,False)
         if col:
-            impacto = True
-            cosa.velx *= -1
-            cosa.vely *= -1
-            cosa.vidas -= 1
-            print ("Vidas: ", cosa.vidas)
-            print ("impacto: ",impacto)
-            vidas = "Vidas: " + str(cosa.vidas)
+            if r1.damage > 0:
+                impacto = True
+                cosa.velx *= -1
+                cosa.vely *= -1
+                cosa.vidas -= r1.damage
+                print ("Vidas: ", cosa.vidas)
+                vidas = "Vidas: " + str(cosa.vidas)
         if col2:
-            impacto = True
-            cosa.velx *= -1
-            cosa.vely *= -1
-            cosa.vidas -= 3
-            print ("Vidas: ", cosa.vidas)
-            print ("impacto: ",impacto)
-            vidas = "Vidas: " + str(cosa.vidas)
+            if r2.damage > 0:
+                impacto = True
+                cosa.velx *= -1
+                cosa.vely *= -1
+                cosa.vidas -= r2.damage
+                print ("Vidas: ", cosa.vidas)
+                vidas = "Vidas: " + str(cosa.vidas)
+        impacto = False
 
         #colision con los objetos
-
         boo = pygame.sprite.spritecollide(cosa,booster,True)
         if boo:
             cosa.inventario[2] += 1
@@ -444,31 +459,20 @@ if __name__ == '__main__':
         if cor:
             cosa.vidas += 1
             print("vidas =", cosa.vidas)
+            vidas = "Vidas: " + str(cosa.vidas)
 
         tot = pygame.sprite.spritecollide(cosa,totem,True)
         if tot:
             cosa.inventario[1] += 1
             print("totem", cosa.inventario[1])
 
-        impacto = False
 
         #fin del juego
         cosa.morir()
+        vidas = "Vidas: " + str(cosa.vidas)
         if cosa.estado==7:
             jugadores.remove(cosa)
             fin_juego = True
-
-
-        #Si el rival perdio toda su vida, es eliminado
-        for r1 in rivales1:
-            r1.morir()
-            if r1.estado == 3:
-                rivales1.remove(r1)
-
-        for r2 in rivales2:
-            r2.morir()
-            if r2.estado == 3:
-                rivales2.remove(r2)
 
 
         #Refresco
@@ -510,7 +514,7 @@ if __name__ == '__main__':
         ventana.blit(info_vidas,[10,10])
 
         pygame.display.flip()
-        reloj.tick(40)
+        reloj.tick(20)
 
         #Movimiento del fondo
         f_posx += f_velx
