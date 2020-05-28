@@ -96,6 +96,7 @@ class Generados(pygame.sprite.Sprite):
        self.rect.y = pos[1]
        self.velx = 0
        self.vely = 0
+       self.damage = 1
        self.f_velxs = 0
 
     def update(self):
@@ -123,6 +124,20 @@ class Lava(pygame.sprite.Sprite):
 
 #Elemento muro, son las paredes del laberinto
 class Muro(pygame.sprite.Sprite):
+   def __init__(self,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("muro.jpg")
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.f_velxs = 0
+
+   def update(self):
+        self.rect.x += self.f_velxs
+
+
+#Elemento monumento, alli se inicia y gana el JUEGO
+class Monumento(pygame.sprite.Sprite):
    def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("muro.jpg")

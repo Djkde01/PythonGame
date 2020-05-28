@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 from constantes import *
 from jugador import Jugador
 from enemigo1 import Enemigo1
@@ -7,7 +8,7 @@ from enemigo2 import Enemigo2
 from sprites import *
 
 class Creacion(pygame.sprite.Sprite):
-    def __init__(self,pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem):
+    def __init__(self,pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem,monument):
         #Creacion de paredes
         for i in range (16):
             p = Pared([-800,i*50])
@@ -43,10 +44,6 @@ class Creacion(pygame.sprite.Sprite):
         for i in range(6):
             m = Muro([260,(i*30)+390])
             muros.add(m)
-        m = Muro([360,720])
-        muros.add(m)
-        m = Muro([430,720])
-        muros.add(m)
 
         #Creacion de generadores
         g1=Generador([-750,430])
@@ -123,6 +120,9 @@ class Creacion(pygame.sprite.Sprite):
         #Creacion de totem vida
         t = Totem([1500,50])
         totem.add(t)
+        #Creacion de Monumento
+        mon = Monumento([400,720])
+        monument.add(mon)
 
 if __name__ == '__main__':
     pygame.init()
@@ -130,8 +130,7 @@ if __name__ == '__main__':
 
     #SECCION PREVIA, INICIO
     pygame.font.init()
-    fuente = pygame.font.Font(None,40)
-    mensaje_inicio = fuente.render("El maravilloso juego", True, BLANCO)
+    img_inicio = pygame.image.load("Inicio.jpeg")
     fin = False
     previo = False
 
@@ -142,14 +141,13 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 previo = True
 
-        ventana.fill(NEGRO)
-        ventana.blit(mensaje_inicio,[200,200])
+        ventana.blit(img_inicio,[0,0])
         pygame.display.flip()
 
     #SECCION DE CONFIGURACION DE NIVEL
 
     #Carga de mapa
-    fondo = pygame.image.load("mapalimpio.jpg")
+    fondo = pygame.image.load("Map.jpg")
     f_info = fondo.get_rect()
     f_velx = 0
     f_posx = -800
@@ -185,9 +183,11 @@ if __name__ == '__main__':
     totem = pygame.sprite.Group()
     #Enemigos creados a partir del generador
     enemy = pygame.sprite.Group()
+    #Monumento jugador
+    monument = pygame.sprite.Group()
 
     #Llamado a clase para crear todos los sprites
-    Creacion(pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem)
+    Creacion(pared,muros,booster,el1,el2,gen,lava,vidaBarra,totem,monument)
 
     #Creacion personaje principal
     player_spr = pygame.image.load("SpritesPlayer.png")
@@ -226,9 +226,17 @@ if __name__ == '__main__':
     vidas = "Vidas: " + str(cosa.vidas)
     info_vidas = info.render(vidas,True,BLANCO)
 
+    #Timer del juego
     cont = 0
     reloj = pygame.time.Clock()
     fin_juego = False
+    tiempo = 0
+    info_t = pygame.font.Font(None,30)
+    restante = "Tiempo: " + str(tiempo)
+    info_restante = info.render(restante,True,BLANCO)
+    #Tiempo en segundos
+    p = 60.00
+    alarm = time.time() + p
 
     #movimiento de los enemigos
     for r in rivales1:
@@ -239,6 +247,16 @@ if __name__ == '__main__':
 
     #Ciclo principal de juego
     while (not fin) and (not fin_juego):
+        #Control de Tiempo
+        n = time.time()
+        if n < alarm:
+            tiempo = (round(alarm-n))
+            restante = "Tiempo: " + str(tiempo)
+            info_restante = info.render(restante,True,BLANCO)
+        else:
+            fin_juego = True
+            victoria = False
+
         #creacion enemigos
         for g in gen:
             if g.temp < 0:
@@ -268,22 +286,22 @@ if __name__ == '__main__':
                 fin = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    cosa.mover(5,0)
+                    cosa.mover(7,0)
                     cosa.estado = 1
                     cosa.dir = 1
                     cosa.accion = 1
                 if event.key == pygame.K_LEFT:
-                    cosa.mover(-5,0)
+                    cosa.mover(-7,0)
                     cosa.estado = 1
                     cosa.dir = 3
                     cosa.accion = 0
                 if event.key == pygame.K_UP:
-                    cosa.mover(0,-5)
+                    cosa.mover(0,-7)
                     cosa.estado = 1
                     cosa.dir = 0
                     cosa.accion = 4
                 if event.key == pygame.K_DOWN:
-                    cosa.mover(0,5)
+                    cosa.mover(0,7)
                     cosa.estado = 1
                     cosa.dir = 2
                     cosa.accion = 5
@@ -357,6 +375,10 @@ if __name__ == '__main__':
             r2.f_velxs = f_velx
         for en in enemy:
             en.f_velxs = f_velx
+        for mo in monument:
+            mo.f_velxs = f_velx
+        for ba in balas:
+            ba.f_velxs = f_velx
 
 
         #Limpieza de memoria balas
@@ -364,7 +386,7 @@ if __name__ == '__main__':
             #Deteccion de colision entre bala y enemigo
             disp = pygame.sprite.spritecollide(b,rivales1,False)
             disp2 = pygame.sprite.spritecollide(b,rivales2,False)
-            disp3 = pygame.sprite.spritecollide(b,enemy,True)
+            disp3 = pygame.sprite.spritecollide(b,enemy,False)
             choq_mur = pygame.sprite.spritecollide(b,muros,False)
             #Eliminacion al salir de pantalla
             if b.rect.y < -50:
@@ -403,10 +425,10 @@ if __name__ == '__main__':
                 print ("Rival 2 eliminado")
 
         for m in enemy:
-            en = pygame.sprite.spritecollide(r,jugadores,False)
+            en = pygame.sprite.spritecollide(m,jugadores,False)
             if en:
                 cosa.detener()
-                r.detener()
+                m.detener()
 
         #Limpieza enemigos creados en generadores, se eliminan al chocar con un muro
         for r in enemy:
@@ -440,32 +462,43 @@ if __name__ == '__main__':
         impacto = False
 
         #colision con los objetos
+        #Colision con booster
         boo = pygame.sprite.spritecollide(cosa,booster,True)
         if boo:
             cosa.inventario[2] += 1
         cosa.mayo_rakuin()
 
+        #Colision con gemas
         gem1 = pygame.sprite.spritecollide(cosa,el1,True)
         gem2 = pygame.sprite.spritecollide(cosa,el2,True)
         if gem1 or gem2:
             cosa.inventario[0] +=1
 
+        #Colision con lava
         lav = pygame.sprite.spritecollide(cosa,lava,False)
         if lav:
             cosa.llamas = 1
         cosa.quemado()
 
+        #Colision con vidas
         cor = pygame.sprite.spritecollide(cosa,vidaBarra,True)
         if cor:
             cosa.vidas += 1
             print("vidas =", cosa.vidas)
             vidas = "Vidas: " + str(cosa.vidas)
 
+        #Colision con totem
         tot = pygame.sprite.spritecollide(cosa,totem,True)
         if tot:
             cosa.inventario[1] += 1
             print("totem", cosa.inventario[1])
 
+        #Colision con Monumento
+        monum = pygame.sprite.spritecollide(cosa,monument,False)
+        if monum:
+            if cosa.inventario[0]>=2:
+                fin_juego = True
+                victoria = True
 
         #fin del juego
         cosa.morir()
@@ -473,7 +506,7 @@ if __name__ == '__main__':
         if cosa.estado==7:
             jugadores.remove(cosa)
             fin_juego = True
-
+            victoria = False
 
         #Refresco
         #Update de objetos
@@ -490,10 +523,12 @@ if __name__ == '__main__':
         lava.update()
         el1.update()
         el2.update()
+        monument.update()
         booster.update()
         #Ubicacion mapa
         ventana.blit(fondo,[f_posx,0])
         #Dibujo de objetos
+        monument.draw(ventana)
         jugadores.draw(ventana)
         balas.draw(ventana)
         rivales1.draw(ventana)
@@ -511,7 +546,8 @@ if __name__ == '__main__':
         vidaBarra.draw(ventana)
         #Mensaje vidas jugador
         info_vidas = info.render(vidas,True,BLANCO)
-        ventana.blit(info_vidas,[10,10])
+        ventana.blit(info_vidas,[120,10])
+        ventana.blit(info_restante,[10,10])
 
         pygame.display.flip()
         reloj.tick(20)
@@ -519,14 +555,26 @@ if __name__ == '__main__':
         #Movimiento del fondo
         f_posx += f_velx
 
-    #SECCION FINAL, FIN DEL JUEGO
-    fuente_f = pygame.font.Font(None,32)
-    mensaje_fin = fuente_f.render("Que bobo, perdio", True, BLANCO)
-    while not fin:
+    #SECCION FINAL, FIN DEL JUEGO POR PERDIDA
+    img_fin_loose = pygame.image.load("Fin.jpeg")
+    while (not fin) and (not victoria):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 fin  = True
+            if event.type == pygame.KEYDOWN:
+                fin = True
 
-        ventana.fill(NEGRO)
-        ventana.blit(mensaje_fin,[200,200])
+        ventana.blit(img_fin_loose,[0,0])
+        pygame.display.flip()
+
+    #SECCION FINAL, FIN JUEGO CON TRIUNFO
+    img_fin_win = pygame.image.load("Triunfo.jpg")
+    while (not fin) and (victoria):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                fin  = True
+            if event.type == pygame.KEYDOWN:
+                fin = True
+
+        ventana.blit(img_fin_win,[0,0])
         pygame.display.flip()
