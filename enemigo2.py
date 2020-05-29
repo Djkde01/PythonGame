@@ -57,7 +57,7 @@ class Enemigo2(Enemigo):
         self.image = self.animacion[self.accion][self.con]
 
     def mover(self):
-        self.vely = random.randrange(-11,12)
+        self.vely = 5
         self.estado = 2
 
     #si llega hasta alguno de los bordes cambiará la dirección en la que iba hacia el lado contrario

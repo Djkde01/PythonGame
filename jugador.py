@@ -80,8 +80,8 @@ class Jugador(pygame.sprite.Sprite):
         self.vely = y
 
     def RetPos(self):
-        x = self.rect.x
-        y = self.rect.y
+        x = (self.rect.x) + 10
+        y = self.rect.y + 20
         return [x,y]
 
     def detener(self):
@@ -94,8 +94,6 @@ class Jugador(pygame.sprite.Sprite):
          if self.inventario[2] > 0:
              self.llamas = 0
              self.estado = 2
-             self.velx *= 1.05
-             self.vely *= 1.05
              self.inventario[2] -= 1
 
     #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
@@ -120,5 +118,3 @@ class Jugador(pygame.sprite.Sprite):
     def quemado(self):
         if self.llamas == 1:
             self.estado = 6
-            self.velx *= 0.9
-            self.vely *= 0.9

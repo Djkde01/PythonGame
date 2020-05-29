@@ -44,7 +44,72 @@ class Creacion(pygame.sprite.Sprite):
         for i in range(6):
             m = Muro([260,(i*30)+390])
             muros.add(m)
-
+        for i in range(8):
+            m = Muro([1460,(i*30)+510])
+            muros.add(m)
+        for i in range(3):
+            m = Muro([(i*30)+1390,510])
+            muros.add(m)
+        for i in range(3):
+            m = Muro([1360,(i*30)+510])
+            muros.add(m)
+        for i in range(5):
+            m = Muro([1480,(i*30)+250])
+            muros.add(m)
+        for i in range(32):
+            m = Muro([(i*30)+600,115])
+            muros.add(m)
+        for i in range(20):
+            m = Muro([521,(i*30)+150])
+            muros.add(m)
+        for i in range(26):
+            m = Muro([(i*30)+551,210])
+            muros.add(m)
+        for i in range(7):
+            m = Muro([600,(i*30)+240])
+            muros.add(m)
+        for i in range(4):
+            m = Muro([(i*30)+630,360])
+            muros.add(m)
+        for i in range(1):
+            m = Muro([1300,240])
+            muros.add(m)
+        for i in range(5):
+            m = Muro([1410,(i*30)+140])
+            muros.add(m)
+        for i in range(9):
+            m = Muro([(i*30)+1280,390])
+            muros.add(m)
+        for i in range(10):
+            m = Muro([1270,(i*30)+390])
+            muros.add(m)
+        for i in range(18):
+            m = Muro([(i*30)+605,638])
+            muros.add(m)
+        for i in range(8):
+            m = Muro([(i*30)+1030,540])
+            muros.add(m)
+        for i in range(11):
+            m = Muro([(i*30)+940,450])
+            muros.add(m)
+        for i in range(4):
+            m = Muro([940,(i*30)+450])
+            muros.add(m)
+        for i in range(3):
+            m = Muro([940,(i*30)+450])
+            muros.add(m)
+        for i in range(11):
+            m = Muro([(i*30)+615,540])
+            muros.add(m)
+        for i in range(8):
+            m = Muro([830,(i*30)+300])
+            muros.add(m)
+        for i in range(4):
+            m = Muro([1093,(i*30)+335])
+            muros.add(m)
+        for i in range(5):
+            m = Muro([(i*30)+943,335])
+            muros.add(m)
         #Creacion de generadores
         g1=Generador([-750,430])
         gen.add(g1)
@@ -52,7 +117,12 @@ class Creacion(pygame.sprite.Sprite):
         gen.add(g2)
         g3 = Generador([-400,720])
         gen.add(g3)
-
+        g4 = Generador([1240,500])
+        gen.add(g4)
+        g5 = Generador([905,510])
+        gen.add(g5)
+        g6 = Generador([1040,720])
+        gen.add(g6)
         #Creacion de suelo de Lava
         cont = 0
         for i in range(5):
@@ -112,11 +182,15 @@ class Creacion(pygame.sprite.Sprite):
         #Creacion de Vidas
         v = Vida([234,50])
         vidaBarra.add(v)
-
+        v = Vida([1520,345])
+        vidaBarra.add(v)
         #Creacion de boosters(velocidad)
         b = Boost([1520,680])
         booster.add(b)
-
+        b2 = Boost([551,240])
+        booster.add(b2)
+        b3 = Boost([1023,400])
+        booster.add(b3)
         #Creacion de totem vida
         t = Totem([1500,50])
         totem.add(t)
@@ -223,7 +297,7 @@ if __name__ == '__main__':
             cuadro1 = en1_spr.subsurface(90*c1,60*f1,90,60)
             fila1.append(cuadro1)
         n.append(fila1)
-    r1=Enemigo1([400,400],n)
+    r1=Enemigo1([-400,350],n)
     rivales1.add(r1)
     r1.bloques = muros
     r1.pared = pared
@@ -237,7 +311,7 @@ if __name__ == '__main__':
             cuadro2 = en2_spr.subsurface(90*c2,60*f2,90,60)
             fila2.append(cuadro2)
         o.append(fila2)
-    r2=Enemigo2([500,400],o)
+    r2=Enemigo2([-500,400],o)
     rivales2.add(r2)
     r2.bloques = muros
     r2.pared = pared
@@ -256,7 +330,7 @@ if __name__ == '__main__':
     restante = "Tiempo: " + str(tiempo)
     info_restante = info.render(restante,True,BLANCO)
     #Tiempo en segundos
-    p = 60.00
+    p = 120.00
     alarm = time.time() + p
 
     #movimiento de los enemigos
@@ -278,15 +352,6 @@ if __name__ == '__main__':
             fin_juego = True
             victoria = False
 
-        #creacion enemigos
-        '''gen_spr = pygame.image.load("SpritesEnemySpawner.png")
-        q = []
-        for f3 in range(4):
-            fila3=[]
-            for c3 in range(4):
-                cuadro3 = gen_spr.subsurface(30*c3,30*f3,30,30)
-                fila3.append(cuadro3)
-            q.append(fila3)'''
         for g in gen:
             if g.temp < 0:
                 direccion = random.randrange(500)
@@ -319,23 +384,39 @@ if __name__ == '__main__':
                 fin = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    cosa.mover(7,0)
-                    cosa.estado = 1
+                    if cosa.estado == 1:
+                        cosa.mover(7,0)
+                    if cosa.estado == 2:
+                        cosa.mover(10,0)
+                    if cosa.estado == 6:
+                        cosa.mover(4,0)
                     cosa.dir = 1
                     cosa.accion = 1
                 if event.key == pygame.K_LEFT:
-                    cosa.mover(-7,0)
-                    cosa.estado = 1
+                    if cosa.estado == 1:
+                        cosa.mover(-7,0)
+                    if cosa.estado == 2:
+                        cosa.mover(-10,0)
+                    if cosa.estado == 6:
+                        cosa.mover(-4,0)
                     cosa.dir = 3
                     cosa.accion = 0
                 if event.key == pygame.K_UP:
-                    cosa.mover(0,-7)
-                    cosa.estado = 1
+                    if cosa.estado == 1:
+                        cosa.mover(0,-7)
+                    if cosa.estado == 2:
+                        cosa.mover(0,-10)
+                    if cosa.estado == 6:
+                        cosa.mover(0,-4)
                     cosa.dir = 0
                     cosa.accion = 4
                 if event.key == pygame.K_DOWN:
-                    cosa.mover(0,7)
-                    cosa.estado = 1
+                    if cosa.estado == 1:
+                        cosa.mover(0,7)
+                    if cosa.estado == 2:
+                        cosa.mover(0,10)
+                    if cosa.estado == 6:
+                        cosa.mover(0,4)
                     cosa.dir = 2
                     cosa.accion = 5
                 if event.key == pygame.K_s:
@@ -364,7 +445,6 @@ if __name__ == '__main__':
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
-                cosa.estado = 1
         #cosa.bordes()
 
         #Control movimiento jugador con mapa
@@ -446,6 +526,14 @@ if __name__ == '__main__':
             if choq_mur:
                 balas.remove(b)
 
+        for m in enemy:
+            en = pygame.sprite.spritecollide(m,jugadores,False)
+            if en:
+                cosa.vidas -= m.damage
+                cosa.estado = 1
+                vidas = "Vidas: " + str(cosa.vidas)
+                m.vidas = 0
+
         #Si el rival perdio toda su vida, es eliminado
         for r in enemy:
             if r.vidas == 0:
@@ -466,16 +554,6 @@ if __name__ == '__main__':
                 r2.damage = 0
                 print ("Rival 2 eliminado")
 
-        for m in enemy:
-            en = pygame.sprite.spritecollide(m,jugadores,False)
-            if en:
-                m.detener()
-                cosa.velx *= -1
-                cosa.vely *= -1
-                cosa.vidas -= r.damage
-                print ("Vidas: ", cosa.vidas)
-                vidas = "Vidas: " + str(cosa.vidas)
-
         #Limpieza enemigos creados en generadores, se eliminan al chocar con un muro
         for r in enemy:
             mur = pygame.sprite.spritecollide(r,muros,False)
@@ -495,7 +573,7 @@ if __name__ == '__main__':
                 cosa.velx *= -1
                 cosa.vely *= -1
                 cosa.vidas -= r1.damage
-                print ("Vidas: ", cosa.vidas)
+                cosa.estado = 1
                 vidas = "Vidas: " + str(cosa.vidas)
         if col2:
             if r2.damage > 0:
@@ -503,7 +581,7 @@ if __name__ == '__main__':
                 cosa.velx *= -1
                 cosa.vely *= -1
                 cosa.vidas -= r2.damage
-                print ("Vidas: ", cosa.vidas)
+                cosa.estado = 1
                 vidas = "Vidas: " + str(cosa.vidas)
         impacto = False
 
@@ -575,12 +653,12 @@ if __name__ == '__main__':
         ventana.blit(fondo,[f_posx,0])
         #Dibujo de objetos
         monument.draw(ventana)
-        jugadores.draw(ventana)
         balas.draw(ventana)
+        jugadores.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
-        enemy.draw(ventana)
         muros.draw(ventana)
+        enemy.draw(ventana)
         vidaBarra.draw(ventana)
         booster.draw(ventana)
         totem.draw(ventana)
@@ -592,7 +670,7 @@ if __name__ == '__main__':
         vidaBarra.draw(ventana)
         #Mensaje vidas jugador
         info_vidas = info.render(vidas,True,BLANCO)
-        ventana.blit(info_vidas,[120,10])
+        ventana.blit(info_vidas,[190,10])
         ventana.blit(info_restante,[10,10])
 
         pygame.display.flip()
