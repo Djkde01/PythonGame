@@ -349,14 +349,8 @@ if __name__ == '__main__':
             restante = "Tiempo: " + str(tiempo) + " sg"
             info_restante = info.render(restante,True,BLANCO)
         else:
-            if cosa.inventario[1] > 0:
-                p = 100.00
-                alarm = time.time() + p
-                n = time.time()
-                cosa.inventario[1] = 0
-            else:
-                fin_juego = True
-                victoria = False
+            fin_juego = True
+            victoria = False
 
         for g in gen:
             if g.temp < 0:
