@@ -213,7 +213,7 @@ if __name__ == '__main__':
     img_inicio = pygame.image.load("Inicio.jpeg")
     fin = False
     previo = False
-
+    start.play()
     while (not fin) and (not previo):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -222,7 +222,6 @@ if __name__ == '__main__':
                 previo = True
 
         ventana.blit(img_inicio,[0,0])
-        start.play()
         pygame.display.flip()
 
     #SECCION DE CONFIGURACION DE NIVEL
@@ -330,7 +329,7 @@ if __name__ == '__main__':
     restante = "Tiempo: " + str(tiempo) + " sg"
     info_restante = info.render(restante,True,BLANCO)
     #Tiempo en segundos
-    p = 140.00
+    p = 275.00
     alarm = time.time() + p
 
     #movimiento de los enemigos
@@ -427,18 +426,18 @@ if __name__ == '__main__':
                     b = Bala(pos)
                     if cosa.dir == 0:
                         b.velx = 0
-                        b.vely = -5
+                        b.vely = -15
                         cosa.accion = 6
                     if cosa.dir == 1:
-                        b.velx = 5
+                        b.velx = 15
                         b.vely = 0
                         cosa.accion = 3
                     if cosa.dir == 2:
                         b.velx = 0
-                        b.vely = 5
+                        b.vely = 15
                         cosa.accion = 7
                     if cosa.dir == 3:
-                        b.velx = -5
+                        b.velx = -15
                         b.vely = 0
                         cosa.accion = 2
                     balas.add(b)
@@ -682,6 +681,8 @@ if __name__ == '__main__':
 
     #SECCION FINAL, FIN DEL JUEGO POR PERDIDA
     img_fin_loose = pygame.image.load("Fin.jpeg")
+    level.stop()
+    death.play()
     while (not fin) and (not victoria):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -690,12 +691,12 @@ if __name__ == '__main__':
                 fin = True
 
         ventana.blit(img_fin_loose,[0,0])
-        level.stop()
-        death.play()
         pygame.display.flip()
 
     #SECCION FINAL, FIN JUEGO CON TRIUNFO
     img_fin_win = pygame.image.load("Triunfo.jpg")
+    death.stop()
+    win.play()
     while (not fin) and (victoria):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -704,6 +705,4 @@ if __name__ == '__main__':
                 fin = True
 
         ventana.blit(img_fin_win,[0,0])
-        level.stop()
-        win.play()
         pygame.display.flip()
