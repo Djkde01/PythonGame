@@ -327,10 +327,10 @@ if __name__ == '__main__':
     fin_juego = False
     tiempo = 0
     info_t = pygame.font.Font(None,30)
-    restante = "Tiempo: " + str(tiempo)
+    restante = "Tiempo: " + str(tiempo) + " sg"
     info_restante = info.render(restante,True,BLANCO)
     #Tiempo en segundos
-    p = 120.00
+    p = 140.00
     alarm = time.time() + p
 
     #movimiento de los enemigos
@@ -346,11 +346,17 @@ if __name__ == '__main__':
         n = time.time()
         if n < alarm:
             tiempo = (round(alarm-n))
-            restante = "Tiempo: " + str(tiempo)
+            restante = "Tiempo: " + str(tiempo) + " sg"
             info_restante = info.render(restante,True,BLANCO)
         else:
-            fin_juego = True
-            victoria = False
+            if cosa.inventario[1] > 0:
+                p = 100.00
+                alarm = time.time() + p
+                n = time.time()
+                cosa.inventario[1] = 0
+            else:
+                fin_juego = True
+                victoria = False
 
         for g in gen:
             if g.temp < 0:
@@ -442,6 +448,7 @@ if __name__ == '__main__':
                         b.vely = 0
                         cosa.accion = 2
                     balas.add(b)
+                    cosa.estado = 1
             if event.type == pygame.KEYUP:
                 cosa.velx = 0
                 cosa.vely = 0
